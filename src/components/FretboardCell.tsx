@@ -7,8 +7,6 @@ type FretboardCellProps = {
   stringIndex: number;
   fret: number;
   openPitchClass?: number;
-  midiNote: number;
-  playNote: (note: number) => void;
 };
 
 export const FretboardCell = ({
@@ -16,8 +14,6 @@ export const FretboardCell = ({
   stringIndex,
   fret,
   openPitchClass,
-  midiNote,
-  playNote,
 }: FretboardCellProps) => {
   const isNut = fret === 1;
 
@@ -31,8 +27,7 @@ export const FretboardCell = ({
         position={position}
         openPitchClass={openPitchClass}
         fret={fret}
-        midiNote={midiNote}
-        playNote={playNote}
+        stringIndex={stringIndex}
       />
     </div>
   );

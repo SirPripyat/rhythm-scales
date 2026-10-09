@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { useFretboardStore } from '@/stores';
 import type { FretboardPosition } from '@/types';
 import { noteNameFromPitchClass } from '@/utils';
 
@@ -11,17 +12,17 @@ type NoteMarkerProps = {
   position?: FretboardPosition;
   openPitchClass?: number;
   fret: number;
-  midiNote: number;
-  playNote: (note: number) => void;
+  stringIndex: number;
 };
 
 export const NoteMarker = ({
   position,
   openPitchClass,
   fret,
-  midiNote,
-  playNote,
+  stringIndex,
 }: NoteMarkerProps) => {
+  const playAt = useFretboardStore((s) => s.playAt);
+
   if (!position) {
     if (fret !== 0 || openPitchClass === undefined) return null;
 
@@ -36,7 +37,7 @@ export const NoteMarker = ({
     <button
       type="button"
       aria-label={`Tocar ${position.noteName}`}
-      onClick={() => playNote(midiNote)}
+      onClick={() => playAt(stringIndex, fret)}
       className={clsx(
         'relative z-2 flex size-8 cursor-pointer items-center justify-center rounded-full',
         'border font-mono text-[13px] font-bold backdrop-blur-[6px] transition',

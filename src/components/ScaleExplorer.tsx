@@ -2,7 +2,8 @@ import { Radio, RadioGroup } from '@headlessui/react';
 import { clsx } from 'clsx';
 import { Label } from '@/components';
 import { SelectField } from '@/components/SelectField.tsx';
-import type { ScaleExplorerState, ScaleType } from '@/types';
+import { useFretboardStore } from '@/stores';
+import type { ScaleType } from '@/types';
 import {
   FRET_OPTIONS,
   NOTE_LABELS,
@@ -10,26 +11,15 @@ import {
   TUNINGS_LABELS,
 } from '@/utils';
 
-type ScaleExplorerProps = {
-  handleValues: <K extends keyof ScaleExplorerState>(
-    value: ScaleExplorerState[K],
-    key: K,
-  ) => void;
-  scaleExplorer: ScaleExplorerState;
-};
+export const ScaleExplorer = () => {
+  const { root, scaleType, tuningKey, fretCount, configure } =
+    useFretboardStore();
 
-export const ScaleExplorer = ({
-  scaleExplorer,
-  handleValues,
-}: ScaleExplorerProps) => {
   return (
-    <div
-      className="flex flex-wrap items-end gap-6 rounded-3xl border border-white/[0.14]
-  bg-white/[0.055] p-5 backdrop-blur-xl"
-    >
+    <div className="flex flex-wrap items-end gap-6 rounded-3xl border border-white/[0.14] bg-white/5.5 p-5 backdrop-blur-xl">
       <RadioGroup
-        value={scaleExplorer.tonic}
-        onChange={(tonic) => handleValues(tonic, 'tonic')}
+        value={root}
+        onChange={(root) => configure({ root })}
         className={'flex flex-col gap-2'}
       >
         <Label>Tônica</Label>
@@ -40,8 +30,8 @@ export const ScaleExplorer = ({
               value={Number(value)}
               className={clsx(
                 'flex h-9.5 w-9.5 items-center justify-center rounded-xl font-mono text-[13px]',
-                'border border-white/[0.14] bg-white/[0.055] text-ink-dim backdrop-blur-[10px] transition-all',
-                'cursor-pointer hover:bg-white/[0.09] hover:text-ink hover:-translate-y-px',
+                'border border-white/[0.14] bg-white/5.5 text-ink-dim backdrop-blur-[10px] transition-all',
+                'cursor-pointer hover:bg-white/9 hover:text-ink hover:-translate-y-px',
                 'data-checked:border-glow-teal/45 data-checked:bg-glow-teal/16 data-checked:text-ink',
                 'focus:outline-none data-focus:outline data-focus:outline-white/40',
               )}
@@ -53,8 +43,8 @@ export const ScaleExplorer = ({
       </RadioGroup>
       <SelectField
         label={'Escala'}
-        value={scaleExplorer.scaleType}
-        onChange={(value) => handleValues(value as ScaleType, 'scaleType')}
+        value={scaleType}
+        onChange={(value) => configure({ scaleType: value as ScaleType })}
         options={Object.entries(SCALE_TYPE_LABELS).map(([value, label]) => ({
           value,
           label,
@@ -62,8 +52,8 @@ export const ScaleExplorer = ({
       />
       <SelectField
         label={'Afinação'}
-        value={scaleExplorer.tuning}
-        onChange={(value) => handleValues(value, 'tuning')}
+        value={tuningKey}
+        onChange={(value) => configure({ tuningKey: value })}
         options={Object.entries(TUNINGS_LABELS).map(([value, label]) => ({
           value,
           label,
@@ -71,8 +61,8 @@ export const ScaleExplorer = ({
       />
       <SelectField
         label={'Qtd. Trastes'}
-        value={scaleExplorer.fretCount}
-        onChange={(value) => handleValues(value, 'fretCount')}
+        value={fretCount}
+        onChange={(value) => configure({ fretCount: value })}
         options={FRET_OPTIONS.map((fret) => ({
           value: fret,
           label: `${fret} trastes`,
