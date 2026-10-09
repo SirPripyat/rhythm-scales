@@ -2,6 +2,7 @@
 //   lista só cresce/encolhe pelo final, nunca reordena ou insere no meio
 import { Fragment } from 'react';
 import { Inlay } from '@/components/Inlay.tsx';
+import { useGuitarSoundfont } from '@/hooks';
 import type { FretboardPosition, Note, ScaleType, Tuning } from '@/types';
 import { createArray, getFretboardPositions, noteAtStringFret } from '@/utils';
 import { FretboardCell } from './FretboardCell';
@@ -12,6 +13,7 @@ type FretboardProps = {
   tuning: Tuning;
   root: Note;
   scaleType: ScaleType;
+  tuningMidi: number[];
 };
 
 export const Fretboard = ({
@@ -19,7 +21,10 @@ export const Fretboard = ({
   tuning,
   root,
   scaleType,
+  tuningMidi,
 }: FretboardProps) => {
+  const playNote = useGuitarSoundfont();
+
   const result = getFretboardPositions(root, scaleType, fretCount, tuning);
 
   const fretArray = createArray(fretCount + 1);
@@ -42,6 +47,7 @@ export const Fretboard = ({
           <Fragment key={stringIndex}>
             {fretArray.map((_, fret) => {
               const openNoteName = noteAtStringFret(stringIndex, fret, tuning);
+              const midiNote = tuningMidi[stringIndex] + fret;
 
               return (
                 <FretboardCell
@@ -51,6 +57,8 @@ export const Fretboard = ({
                   stringIndex={stringIndex}
                   fret={fret}
                   openNoteName={openNoteName}
+                  midiNote={midiNote}
+                  playNote={playNote}
                 />
               );
             })}

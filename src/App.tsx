@@ -2,7 +2,7 @@ import './App.css';
 import { useState } from 'react';
 import { DEFAULT_FRET_COUNT } from '@/constants';
 import { Note, type ScaleExplorerState } from '@/types';
-import { TUNINGS } from '@/utils';
+import { TUNINGS, TUNINGS_MIDI } from '@/utils';
 import { Fretboard, Header, ScaleExplorer } from './components';
 
 const App = () => {
@@ -32,6 +32,7 @@ const App = () => {
         tuning={TUNINGS[scaleExplorer.tuning]}
         root={scaleExplorer.tonic}
         scaleType={scaleExplorer.scaleType}
+        tuningMidi={TUNINGS_MIDI[scaleExplorer.tuning]}
       />
     </main>
   );

@@ -8,6 +8,8 @@ type FretboardCellProps = {
   stringIndex: number;
   fret: number;
   openNoteName?: number;
+  midiNote: number;
+  playNote: (note: number) => void;
 };
 
 export const FretboardCell = ({
@@ -16,13 +18,21 @@ export const FretboardCell = ({
   stringIndex,
   fret,
   openNoteName,
+  midiNote,
+  playNote,
 }: FretboardCellProps) => {
   return (
     <div
       className={`relative border-r border-r-fretwire h-10 flex items-center justify-center ${isNut ? `border-l-4 border-l-nut` : ''}`}
     >
       {fret !== 0 && <GuitarString stringIndex={stringIndex} />}
-      <NoteMarker scale={scale} openNoteName={openNoteName} fret={fret} />
+      <NoteMarker
+        scale={scale}
+        openNoteName={openNoteName}
+        fret={fret}
+        midiNote={midiNote}
+        playNote={playNote}
+      />
     </div>
   );
 };

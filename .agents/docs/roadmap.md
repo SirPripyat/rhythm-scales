@@ -25,22 +25,26 @@ aprender a implementar o projeto **e** fixar teoria de escalas no processo.
 - [x] **Fase 2 — Componente do braço** (fretboard em HTML/CSS, consumindo o motor)
 - [x] **Fase 3 — Controles** (tônica, escala, afinação, nº de trastes)
 
+As fases 4 (Tablatura) e 5 (Áudio genérico) originais foram **removidas** —
+o roteiro em fases fixas encerrou na Fase 3. Dali em diante, o projeto
+passou a avançar por **features soltas**, escolhidas conforme o objetivo
+real do usuário: treinar teoria musical na prática, não só visualizar.
+
+## Features (pós-fases)
+
+- [x] **Clicar numa nota toca o som real no violão** — usa `smplr`
+  (soundfont `acoustic_guitar_steel`), amostras carregadas sob demanda via
+  CDN. Só notas que pertencem à escala atual são clicáveis (decisão do
+  usuário — nota de corda solta fora da escala é só informativa).
+
 ## Passo atual
 
-**Fase 4 — Tablatura**
-
-Fase 3 encerrada: `App.tsx` guarda o estado (`ScaleExplorerState`: tonic,
-scaleType, tuning, fretCount) via `useState`, repassado pro `ScaleExplorer`
-(controles) e pro `Fretboard` (visualização), ambos lendo da mesma fonte.
-Tônica é um `RadioGroup` de chips; escala/afinação/trastes usam o
-`SelectField` (componente reutilizável em cima do `Listbox` do Headless
-UI). Três ajustes finos de UX também fechados: sem linha de corda no
-traste 0, nota da corda solta sempre visível (bolinha só se estiver na
-escala), ordem das cordas corrigida (Mi agudo em cima, Mi grave embaixo).
-
-A ser detalhado em conversa: como desenhar a régua de tablatura alinhada
-ao braço (reaproveitar `getFretboardPositions`? layout por baixo do
-`Fretboard` ou componente separado?).
+Nenhuma feature em andamento no momento. Candidatas discutidas e ainda não
+escolhidas, focadas em treino ativo de teoria (não só visualização):
+modo "adivinhe a nota" (esconde nomes, pede pra identificar), alternar
+nota/grau no braço, soletrar a escala, identificar a escala por padrão,
+posições/caixas (CAGED), acordes diatônicos, tocar a escala inteira em
+sequência (áudio).
 
 ## Decisões/aprendizados
 
@@ -118,3 +122,21 @@ ao braço (reaproveitar `getFretboardPositions`? layout por baixo do
   ali (cordas, trastes) são sequências sintéticas que só crescem/encolhem
   pelo final, nunca reordenam, então índice como `key` é seguro de
   verdade, não só "ignorado".
+- **`smplr` em vez de síntese Web Audio pura**: usuário queria som de
+  violão de verdade, não um bipe sintetizado. `smplr` carrega amostras
+  reais de um soundfont (`acoustic_guitar_steel`) sob demanda, via CDN —
+  sem bundlar áudio no projeto.
+- **`TUNINGS_MIDI` paralelo a `TUNINGS`**: `TUNINGS` guarda só classe de
+  nota (`Note`, 0-11), sem oitava — insuficiente pra tocar o tom certo
+  (duas cordas podem ter a mesma nota em oitavas diferentes). `TUNINGS_MIDI`
+  guarda o MIDI absoluto de cada corda solta; `tuningMidi[stringIndex] +
+  fret` dá o MIDI real da posição (sem `% 12` — aqui se quer o tom
+  absoluto, não a classe).
+- **Hook de áudio chamado uma vez só, no `Fretboard`**: `useGuitarSoundfont`
+  usa `useRef` pra criar o `AudioContext`/`Soundfont` de forma preguiçosa
+  (só no primeiro clique, o que também satisfaz a exigência do navegador
+  de gesto do usuário antes de tocar áudio). Armadilha evitada: chamar o
+  hook dentro do `NoteMarker` (renderizado dezenas de vezes) criaria uma
+  instância **por nota**, recarregando as amostras a cada clique em nota
+  diferente — por isso o hook vive no `Fretboard` (ancestral comum) e
+  `playNote` desce como prop.
