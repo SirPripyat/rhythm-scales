@@ -1,3 +1,4 @@
+export * from './AmbientBackground';
 export * from './Fretboard';
 export * from './Header';
 export * from './Label';

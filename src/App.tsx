@@ -3,7 +3,12 @@ import { useState } from 'react';
 import { DEFAULT_FRET_COUNT } from '@/constants';
 import { Note, type ScaleExplorerState } from '@/types';
 import { TUNINGS, TUNINGS_MIDI } from '@/utils';
-import { Fretboard, Header, ScaleExplorer } from './components';
+import {
+  AmbientBackground,
+  Fretboard,
+  Header,
+  ScaleExplorer,
+} from './components';
 
 const App = () => {
   const [scaleExplorer, setScaleExplorer] = useState<ScaleExplorerState>({
@@ -20,6 +25,8 @@ const App = () => {
 
   return (
     <main className={'px-10 py-5 flex flex-col gap-10'}>
+      <AmbientBackground />
+
       <Header />
 
       <ScaleExplorer

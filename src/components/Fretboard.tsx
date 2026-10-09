@@ -1,10 +1,6 @@
-// biome-ignore-all lint/suspicious/noArrayIndexKey: fret/string index é o próprio dado — a
-//   lista só cresce/encolhe pelo final, nunca reordena ou insere no meio
-import { Fragment } from 'react';
-import { Inlay } from '@/components/Inlay.tsx';
 import { useGuitarSoundfont } from '@/hooks';
 import type { FretboardPosition, Note, ScaleType, Tuning } from '@/types';
-import { createArray, getFretboardPositions, noteAtStringFret } from '@/utils';
+import { getFretboardPositions, noteAtStringFret } from '@/utils';
 import { FretboardCell } from './FretboardCell';
 import { FretNumber } from './FretNumber';
 
@@ -16,6 +12,9 @@ type FretboardProps = {
   tuningMidi: number[];
 };
 
+const positionKey = (stringIndex: number, fret: number) =>
+  `${stringIndex}-${fret}`;
+
 export const Fretboard = ({
   fretCount,
   tuning,
@@ -25,62 +24,51 @@ export const Fretboard = ({
 }: FretboardProps) => {
   const playNote = useGuitarSoundfont();
 
-  const result = getFretboardPositions(root, scaleType, fretCount, tuning);
-
-  const fretArray = createArray(fretCount + 1);
-
-  const scalePositionsByKey = new Map<string, FretboardPosition>(
-    result.map((note) => [`${note.stringIndex}-${note.fret}`, note] as const),
+  const frets = Array.from({ length: fretCount + 1 }, (_, fret) => fret);
+  // a corda mais aguda (maior índice) fica no topo
+  const stringIndexes = Array.from(
+    { length: tuning.length },
+    (_, i) => tuning.length - 1 - i,
   );
+
+  const positions = new Map<string, FretboardPosition>(
+    getFretboardPositions(root, scaleType, fretCount, tuning).map(
+      (position) =>
+        [positionKey(position.stringIndex, position.fret), position] as const,
+    ),
+  );
+
+  const columns = `repeat(${fretCount + 1}, 1fr)`;
 
   return (
     <div
-      className={`px-4 py-2 relative`}
+      className="relative grid rounded-3xl border border-glass-border bg-glass px-5 py-6 backdrop-blur-xl"
       style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${fretCount + 1}, 1fr)`,
+        gridTemplateColumns: columns,
         gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
       }}
     >
-      {tuning
-        .map((_, stringIndex) => (
-          <Fragment key={stringIndex}>
-            {fretArray.map((_, fret) => {
-              const openNoteName = noteAtStringFret(stringIndex, fret, tuning);
-              const midiNote = tuningMidi[stringIndex] + fret;
+      {stringIndexes.flatMap((stringIndex) =>
+        frets.map((fret) => {
+          const key = positionKey(stringIndex, fret);
 
-              return (
-                <FretboardCell
-                  key={`${stringIndex}-${fret}`}
-                  scale={scalePositionsByKey.get(`${stringIndex}-${fret}`)}
-                  isNut={fret === 1}
-                  stringIndex={stringIndex}
-                  fret={fret}
-                  openNoteName={openNoteName}
-                  midiNote={midiNote}
-                  playNote={playNote}
-                />
-              );
-            })}
-          </Fragment>
-        ))
-        .reverse()}
+          return (
+            <FretboardCell
+              key={key}
+              position={positions.get(key)}
+              stringIndex={stringIndex}
+              fret={fret}
+              openPitchClass={noteAtStringFret(stringIndex, fret, tuning)}
+              midiNote={tuningMidi[stringIndex] + fret}
+              playNote={playNote}
+            />
+          );
+        }),
+      )}
 
-      {fretArray.map((_, fret) => (
+      {frets.map((fret) => (
         <FretNumber key={fret} fret={fret} />
       ))}
-
-      <div
-        className={`px-4 rounded-lg bg-wood-surface absolute inset-0 -z-10`}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${fretCount + 1}, 1fr)`,
-        }}
-      >
-        {fretArray.map((_, fret) => (
-          <Inlay key={fret} fret={fret} />
-        ))}
-      </div>
     </div>
   );
 };

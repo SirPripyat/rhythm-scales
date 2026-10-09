@@ -1,34 +1,35 @@
 import type { FretboardPosition } from '@/types';
-import { GuitarString } from './GuitarString.tsx';
+import { GuitarString } from './GuitarString';
 import { NoteMarker } from './NoteMarker';
 
 type FretboardCellProps = {
-  isNut: boolean;
-  scale?: FretboardPosition;
+  position?: FretboardPosition;
   stringIndex: number;
   fret: number;
-  openNoteName?: number;
+  openPitchClass?: number;
   midiNote: number;
   playNote: (note: number) => void;
 };
 
 export const FretboardCell = ({
-  isNut,
-  scale,
+  position,
   stringIndex,
   fret,
-  openNoteName,
+  openPitchClass,
   midiNote,
   playNote,
 }: FretboardCellProps) => {
+  const isNut = fret === 1;
+
   return (
-    <div
-      className={`relative border-r border-r-fretwire h-10 flex items-center justify-center ${isNut ? `border-l-4 border-l-nut` : ''}`}
-    >
+    <div className="relative flex h-10 items-center justify-center border-r border-glass-border">
+      {isNut && (
+        <span className="absolute inset-y-0.5 left-0 w-0.75 rounded-full bg-linear-to-b from-white to-white/50 shadow-nut" />
+      )}
       {fret !== 0 && <GuitarString stringIndex={stringIndex} />}
       <NoteMarker
-        scale={scale}
-        openNoteName={openNoteName}
+        position={position}
+        openPitchClass={openPitchClass}
         fret={fret}
         midiNote={midiNote}
         playNote={playNote}

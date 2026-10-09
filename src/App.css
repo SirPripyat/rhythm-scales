@@ -1,25 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-wood: #1b140f;
-  --color-wood-surface: #241c16;
-  --color-wood-surface-2: #2e2219;
-  --color-nut: #d8cbac;
-  --color-fretwire: #5b4a3c;
-  --color-string-plain: #cbbfa4;
-  --color-string-wound: #96825f;
-  --color-inlay: #c9bba0;
-  --color-accent: #c68a3e;
-  --color-accent-strong: #e3a95c;
-  --color-degree: #6f8f74;
-  --color-ink: #ede3d3;
-  --color-ink-dim: #ae9b82;
+  /* liquid glass */
+  --color-void: #0a0a12;
+  --color-void-2: #0e0c1a;
+  --color-glow-amber: #ffb454;
+  --color-glow-violet: #8b6bff;
+  --color-glow-teal: #4de8c9;
+  --color-ink: #f3f2fa;
+  --color-ink-dim: #a9a6c2;
+  --color-ink-faint: #716e8c;
+  --color-glass: rgb(255 255 255 / 0.055);
+  --color-glass-border: rgb(255 255 255 / 0.14);
+  --color-on-amber: #1c1203;
+
+  --shadow-nut: 0 0 12px 2px rgb(201 196 255 / 0.45);
+  --shadow-string: 0 0 6px rgb(201 196 255 / 0.25);
+  --shadow-inlay: 0 0 10px 2px rgb(167 159 255 / 0.28);
+  --shadow-root: 0 0 18px -2px rgb(255 180 84 / 0.65);
+
+  --text-shadow-note: 0 1px 4px rgb(0 0 0 / 0.55);
+  --font-display: "Bricolage Grotesque", "Avenir Next", sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+
+  --animate-drift: drift 34s ease-in-out infinite alternate;
+
+  @keyframes drift {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(2%, -3%, 0) scale(1.06);
+    }
+  }
+}
+
+@utility bg-ambient-glow {
+  background-image:
+    radial-gradient(
+      38% 32% at 18% 20%,
+      color-mix(in oklab, var(--color-glow-violet) 30%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      34% 30% at 85% 15%,
+      color-mix(in oklab, var(--color-glow-amber) 22%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      42% 36% at 70% 85%,
+      color-mix(in oklab, var(--color-glow-teal) 16%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      30% 28% at 10% 85%,
+      color-mix(in oklab, var(--color-glow-violet) 14%, transparent),
+      transparent 70%
+    );
+}
+
+@utility bg-string {
+  background-image: linear-gradient(
+    90deg,
+    color-mix(in oklab, var(--color-ink) 5%, transparent),
+    color-mix(in oklab, var(--color-ink) 55%, transparent) 8%,
+    color-mix(in oklab, var(--color-ink) 55%, transparent) 92%,
+    color-mix(in oklab, var(--color-ink) 5%, transparent)
+  );
+}
+
+@utility bg-inlay {
+  background-image: radial-gradient(
+    circle at 35% 30%,
+    rgb(255 255 255 / 0.9),
+    rgb(167 159 255 / 0.18) 70%
+  );
 }
 
 body {
   margin: 0;
-  color: #fff;
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-
-  @apply bg-wood;
+  @apply bg-void text-ink font-body;
 }

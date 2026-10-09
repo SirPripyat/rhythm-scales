@@ -1,4 +1,5 @@
 import { Radio, RadioGroup } from '@headlessui/react';
+import { clsx } from 'clsx';
 import { Label } from '@/components';
 import { SelectField } from '@/components/SelectField.tsx';
 import type { ScaleExplorerState, ScaleType } from '@/types';
@@ -22,7 +23,10 @@ export const ScaleExplorer = ({
   handleValues,
 }: ScaleExplorerProps) => {
   return (
-    <div className={'flex gap-6 bg-wood-surface p-6 rounded-lg'}>
+    <div
+      className="flex flex-wrap items-end gap-6 rounded-3xl border border-white/[0.14]
+  bg-white/[0.055] p-5 backdrop-blur-xl"
+    >
       <RadioGroup
         value={scaleExplorer.tonic}
         onChange={(tonic) => handleValues(tonic, 'tonic')}
@@ -34,16 +38,19 @@ export const ScaleExplorer = ({
             <Radio
               key={label}
               value={Number(value)}
-              className={
-                'flex items-center justify-center cursor-pointer rounded-lg h-10 w-10 bg-wood-surface-2 text-ink-dim shadow-md transition focus:not-data-focus:outline-none data-checked:bg-accent data-checked:text-ink data-focus:outline data-focus:outline-white'
-              }
+              className={clsx(
+                'flex h-9.5 w-9.5 items-center justify-center rounded-xl font-mono text-[13px]',
+                'border border-white/[0.14] bg-white/[0.055] text-ink-dim backdrop-blur-[10px] transition-all',
+                'cursor-pointer hover:bg-white/[0.09] hover:text-ink hover:-translate-y-px',
+                'data-checked:border-glow-teal/45 data-checked:bg-glow-teal/16 data-checked:text-ink',
+                'focus:outline-none data-focus:outline data-focus:outline-white/40',
+              )}
             >
               {label}
             </Radio>
           ))}
         </div>
       </RadioGroup>
-
       <SelectField
         label={'Escala'}
         value={scaleExplorer.scaleType}
@@ -53,7 +60,6 @@ export const ScaleExplorer = ({
           label,
         }))}
       />
-
       <SelectField
         label={'Afinação'}
         value={scaleExplorer.tuning}
@@ -63,7 +69,6 @@ export const ScaleExplorer = ({
           label,
         }))}
       />
-
       <SelectField
         label={'Qtd. Trastes'}
         value={scaleExplorer.fretCount}

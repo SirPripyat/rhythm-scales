@@ -1,7 +1,11 @@
 export const Header = () => {
   return (
-    <div className={'px-4 py-4 rounded-lg bg-wood-surface'}>
-      <h1 className={'text-3xl font-bold text-white'}>Rhythm Scales</h1>
-    </div>
+    <h1
+      className="text-balance bg-gradient-to-r from-white from-40% via-glow-violet
+  via-78% to-glow-amber bg-clip-text font-display text-4xl font-bold text-transparent
+  sm:text-5xl"
+    >
+      Rhythm Scales
+    </h1>
   );
 };

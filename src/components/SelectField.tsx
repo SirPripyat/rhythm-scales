@@ -25,25 +25,27 @@ type SelectFieldProps<V extends string | number> = {
 };
 
 const buttonStyles = clsx(
-  'group flex h-10 cursor-pointer items-center justify-between gap-2',
-  'rounded-lg bg-wood-surface-2 px-3 py-2 text-sm text-ink shadow-md',
-  'focus:not-data-focus:outline-none data-focus:outline data-focus:outline-white',
-  'data-disabled:cursor-not-allowed data-disabled:opacity-50',
+  'flex h-[38px] items-center gap-2.5 whitespace-nowrap rounded-xl px-3.5',
+  'border border-white/[0.14] bg-white/[0.055] text-ink font-body text-[13.5px] backdrop-blur-[10px]',
+  'cursor-pointer transition-all hover:bg-white/[0.09]',
+  'data-open:border-white/[0.26]',
+  'focus:outline-none data-focus:outline data-focus:outline-white/40',
 );
 
 const iconStyles = clsx(
-  'size-4 shrink-0 fill-ink-dim transition-transform',
-  'group-data-open:rotate-180',
+  'size-4 fill-ink-faint transition-transform group-data-open:rotate-180',
 );
 
 const optionsStyles = clsx(
-  'z-3 w-(--button-width) rounded-lg bg-wood-surface-2 p-1 shadow-md',
-  '[--anchor-gap:12px] focus:outline-none',
+  'z-3 w-(--button-width) rounded-2xl border border-white/[0.26] p-1.5',
+  'bg-[rgba(18,16,30,0.72)] backdrop-blur-[28px] backdrop-saturate-150',
+  '[--anchor-gap:8px] focus:outline-none',
 );
 
 const optionStyles = clsx(
-  'cursor-pointer rounded-md px-3 py-1.5 text-sm text-ink-dim',
-  'data-focus:bg-wood-surface data-selected:bg-accent data-selected:text-ink',
+  'cursor-pointer rounded-lg px-3 py-2 font-body text-[13.5px] text-ink-dim',
+  'data-focus:bg-white/[0.09] data-focus:text-ink',
+  'data-selected:border data-selected:border-glow-teal/45 data-selected:bg-glow-teal/16 data-selected:text-ink',
 );
 
 export const SelectField = <V extends string | number>({
