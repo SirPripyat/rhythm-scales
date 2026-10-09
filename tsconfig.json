@@ -8,14 +8,17 @@
     "types": ["@rsbuild/core/types", "node"],
     "useDefineForClassFields": true,
 
-    /* modules */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
     "moduleDetection": "force",
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
 
-    /* type checking */
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },

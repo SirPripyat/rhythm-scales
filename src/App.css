@@ -1,28 +1,25 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+
+@theme {
+  --color-wood: #1b140f;
+  --color-wood-surface: #241c16;
+  --color-wood-surface-2: #2e2219;
+  --color-nut: #d8cbac;
+  --color-fretwire: #5b4a3c;
+  --color-string-plain: #cbbfa4;
+  --color-string-wound: #96825f;
+  --color-inlay: #c9bba0;
+  --color-accent: #c68a3e;
+  --color-accent-strong: #e3a95c;
+  --color-degree: #6f8f74;
+  --color-ink: #ede3d3;
+  --color-ink-dim: #ae9b82;
+}
 
 body {
   margin: 0;
   color: #fff;
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  background-image: linear-gradient(to bottom, #020917, #101725);
-}
 
-.content {
-  display: flex;
-  min-height: 100vh;
-  line-height: 1.1;
-  text-align: center;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.content h1 {
-  font-size: 3.6rem;
-  font-weight: 700;
-}
-
-.content p {
-  font-size: 1.2rem;
-  font-weight: 400;
-  opacity: 0.5;
+  @apply bg-wood;
 }
