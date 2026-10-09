@@ -39,12 +39,46 @@ real do usuário: treinar teoria musical na prática, não só visualizar.
 
 ## Passo atual
 
-Nenhuma feature em andamento no momento. Candidatas discutidas e ainda não
-escolhidas, focadas em treino ativo de teoria (não só visualização):
-modo "adivinhe a nota" (esconde nomes, pede pra identificar), alternar
-nota/grau no braço, soletrar a escala, identificar a escala por padrão,
-posições/caixas (CAGED), acordes diatônicos, tocar a escala inteira em
-sequência (áudio).
+**Feature em andamento: segunda tela — jogo "Montar a escala".**
+
+Mecânica (decisão do usuário): dado um root escolhido pelo usuário, o jogo
+tem duas etapas em sequência —
+
+1. **Etapa simbólica**: usuário monta de cabeça a sequência de notas da
+   escala maior a partir do root (sem olhar o braço), baseado no padrão da
+   escala de Dó (Dó Ré Mi Fá Sol Lá Si Dó). Valida contra
+   `getScaleNotes(root, 'major')`, que já existe e dá exatamente
+   `{ degree, pitchClass, noteName }[]` pra cada grau.
+2. **Etapa espacial**: só depois da etapa 1 completa e correta, o usuário
+   posiciona essas mesmas notas no braço (clicando corda×traste), num
+   braço "vazio" (sem marcadores prontos) — reaproveitando o motor/visual
+   do `Fretboard` existente, mas em modo "quiz" em vez de modo "display".
+
+Navegação: **React Router** (rotas reais, ex. `/` pra tela Escala atual,
+`/jogo` pra essa tela nova) — decisão do usuário, mesmo sendo a primeira
+dependência nova desde o início do projeto nessa categoria (as outras —
+Headless UI, smplr — foram por leveza/necessidade pontual; aqui é porque o
+app passa a ser multi-tela de verdade).
+
+Passos planejados (um por vez, ciclo curto por passo):
+- [ ] **Passo 1 — Roteamento**: instalar `react-router`, envolver a árvore
+  com o router, extrair o conteúdo atual de `App.tsx` pra uma rota `/`
+  (ex. `EscalaPage`), criar rota `/jogo` com uma página placeholder, e
+  adicionar navegação (abas/links) no `Header`.
+- [ ] **Passo 2 — Store do jogo**: estado da etapa simbólica (root
+  sorteado/escolhido, respostas do usuário por grau, acerto/erro por grau,
+  se a etapa 1 está completa) e da etapa espacial (posições clicadas,
+  acerto/erro por posição).
+- [ ] **Passo 3 — UI da etapa simbólica**: seletor de notas + slots dos 7
+  graus + feedback de acerto/erro, usando `getScaleNotes`.
+- [ ] **Passo 4 — UI da etapa espacial**: braço em modo "quiz" (variante do
+  `Fretboard`/`FretboardCell` que aceita clique como resposta em vez de só
+  mostrar o resultado) + feedback + transição pro final/novo round.
+
+Outras candidatas discutidas, ainda não escolhidas (ficam pra depois):
+modo "adivinhe a nota", alternar nota/grau no braço, identificar a escala
+por padrão, posições/caixas (CAGED), acordes diatônicos, tocar a escala
+inteira em sequência (áudio).
 
 ## Decisões/aprendizados
 

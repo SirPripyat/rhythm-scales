@@ -2,6 +2,7 @@ import './App.css';
 import {
   AmbientBackground,
   Fretboard,
+  FretboardSubtitles,
   Header,
   ScaleExplorer,
 } from '@/components';
@@ -15,9 +16,11 @@ const App = () => {
 
       <ScaleExplorer />
 
-      <Fretboard />
+      <div className={'flex flex-col gap-3'}>
+        <FretboardSubtitles />
+        <Fretboard />
+      </div>
     </main>
   );
 };
-
 export default App;

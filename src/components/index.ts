@@ -1,5 +1,6 @@
 export * from './AmbientBackground';
 export * from './Fretboard';
+export * from './FretboardSubtitles';
 export * from './Header';
 export * from './Label';
 export * from './ScaleExplorer';

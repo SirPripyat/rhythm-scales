@@ -5,7 +5,7 @@ export const Header = () => {
   via-78% to-glow-amber bg-clip-text font-display text-4xl font-bold text-transparent
   sm:text-5xl"
     >
-      Rhythm Scales
+      Scalewise
     </h1>
   );
 };
