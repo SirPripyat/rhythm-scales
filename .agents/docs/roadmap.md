@@ -41,18 +41,34 @@ real do usuário: treinar teoria musical na prática, não só visualizar.
 
 **Feature em andamento: segunda tela — jogo "Montar a escala".**
 
-Mecânica (decisão do usuário): dado um root escolhido pelo usuário, o jogo
-tem duas etapas em sequência —
+Protótipo clicável discutido antes de implementar:
+https://claude.ai/artifact/T6FH6SdjzMBzHTiVE64PEy (ainda reflete a v1 da
+mecânica da etapa espacial — ver nota de atualização abaixo).
+
+Mecânica (decisão do usuário): dado um root e uma escala (`ScaleType`)
+escolhidos pelo usuário, o jogo tem duas etapas em sequência, **numa
+página só** (sem trocar de tela entre elas — as seções ficam todas
+presentes, desbloqueando conforme o usuário avança, em vez de esconder
+umas pras mostrar outras) —
 
 1. **Etapa simbólica**: usuário monta de cabeça a sequência de notas da
-   escala maior a partir do root (sem olhar o braço), baseado no padrão da
-   escala de Dó (Dó Ré Mi Fá Sol Lá Si Dó). Valida contra
-   `getScaleNotes(root, 'major')`, que já existe e dá exatamente
-   `{ degree, pitchClass, noteName }[]` pra cada grau.
-2. **Etapa espacial**: só depois da etapa 1 completa e correta, o usuário
-   posiciona essas mesmas notas no braço (clicando corda×traste), num
-   braço "vazio" (sem marcadores prontos) — reaproveitando o motor/visual
-   do `Fretboard` existente, mas em modo "quiz" em vez de modo "display".
+   escala a partir do root (sem olhar o braço), baseado no padrão da
+   escala de Dó. Valida contra `getScaleNotes(root, scaleType)`, que já
+   existe e dá exatamente `{ degree, pitchClass, noteName }[]` pra cada
+   grau (grau 1 = tônica, já dado).
+2. **Etapa espacial** (regra atualizada — substitui a ideia anterior de
+   "caixa ascendente"): só depois da etapa 1 completa e correta, o
+   usuário escolhe a quantidade de trastes (reaproveitando `FRET_OPTIONS`,
+   igual ao `ScaleExplorer`) e precisa marcar **todas** as posições da
+   escala no braço inteiro até esse traste — incluindo as cordas soltas
+   (traste 0). A tônica continua dada de graça (marcada, não clicável);
+   o resto das posições (a mesma nota pode aparecer em várias oitavas) o
+   usuário precisa achar todas, não só uma. Vantagem grande dessa troca:
+   o alvo é exatamente o que `getFretboardPositions(root, scaleType,
+   fretCount, tuning)` já calcula — **nenhum algoritmo novo é
+   necessário**, e some o problema do salto de trastes que o protótipo
+   v1 expôs (não tinha solução boa dentro da ideia de "uma posição
+   específica por grau").
 
 Navegação: **React Router** (rotas reais, ex. `/` pra tela Escala atual,
 `/jogo` pra essa tela nova) — decisão do usuário, mesmo sendo a primeira
@@ -61,26 +77,66 @@ Headless UI, smplr — foram por leveza/necessidade pontual; aqui é porque o
 app passa a ser multi-tela de verdade).
 
 Passos planejados (um por vez, ciclo curto por passo):
-- [ ] **Passo 1 — Roteamento**: instalar `react-router`, envolver a árvore
-  com o router, extrair o conteúdo atual de `App.tsx` pra uma rota `/`
-  (ex. `EscalaPage`), criar rota `/jogo` com uma página placeholder, e
-  adicionar navegação (abas/links) no `Header`.
-- [ ] **Passo 2 — Store do jogo**: estado da etapa simbólica (root
-  sorteado/escolhido, respostas do usuário por grau, acerto/erro por grau,
-  se a etapa 1 está completa) e da etapa espacial (posições clicadas,
-  acerto/erro por posição).
-- [ ] **Passo 3 — UI da etapa simbólica**: seletor de notas + slots dos 7
-  graus + feedback de acerto/erro, usando `getScaleNotes`.
-- [ ] **Passo 4 — UI da etapa espacial**: braço em modo "quiz" (variante do
-  `Fretboard`/`FretboardCell` que aceita clique como resposta em vez de só
-  mostrar o resultado) + feedback + transição pro final/novo round.
+- [x] **Passo 1 — Roteamento**: `react-router` instalado, `App.tsx`
+  envolvido com `BrowserRouter`, conteúdo anterior extraído pra
+  `ScalePage` (rota `/`), `BuildScalePage` placeholder criado (rota
+  `/build-scale`), navegação no `Header` com `NavLink`.
+- [x] **Passo 2 — Store do jogo** (`useGameStore`, mesmo padrão do
+  `useFretboardStore`: config + estado derivado):
+  - `root`, `scaleType`, `fretCount` (escolhidos pelo usuário; trocar
+    qualquer um reseta as respostas, igual o `configure` do fretboard
+    reseta `positions`).
+  - `symbolicAnswers: (Note | null)[]` — tamanho dinâmico
+    (`SCALE_INTERVALS[scaleType].length`, não fixo em 7 — pentatônica
+    tem 5, blues 6), índice 0 = grau 1 = root, sempre preenchido.
+  - `symbolicChecked`, `symbolicAllCorrect` — setados só por
+    `checkSymbolic()` (feedback é só no final, não por grau).
+  - `spatialTargets` — derivado via `getFretboardPositions(root,
+    scaleType, fretCount)` filtrando fora `isRoot` (essas são de graça).
+  - `spatialSelected: Set<string>` (chave `"stringIndex-fret"`,
+    tentativa atual), `spatialLockedCorrect: Set<string>` (acertos que
+    persistem entre tentativas), `spatialChecked`, `spatialAllCorrect`.
+  - Ações: `configure` (patch de `root`/`scaleType`/`fretCount`, reseta
+    derivado + progresso — substitui a ideia original de `setRoot`/
+    `setScaleType`/`setFretCount` separados, ver Decisões/aprendizados),
+    `answerSymbolic`, `checkSymbolic`, `toggleSpatialCell`, `checkSpatial`,
+    `reset`.
+- [ ] **Passo 3 — Página única do jogo** (`BuildScalePage`), seções
+  empilhadas na mesma página (não telas separadas):
+  1. config (tônica/escala/trastes — reaproveita visual do
+     `ScaleExplorer`/`SelectField`);
+  2. etapa simbólica (slots por grau, desabilitada até root+escala
+     escolhidos);
+  3. etapa espacial (braço em modo "quiz" até o traste escolhido,
+     incluindo traste 0 — variante do `Fretboard`/`FretboardCell` que
+     aceita clique como resposta em vez de só mostrar o resultado),
+     desabilitada até a etapa 1 estar correta;
+  4. mensagem de conclusão quando a etapa espacial fecha 100%.
+- [ ] **Passo 4 — Feedback visual + fluxo de "tentar de novo"**: anéis de
+  acerto/erro, contadores, revelar posições que faltaram — já prototipado
+  (link acima), portar o comportamento pro componente real.
 
 Outras candidatas discutidas, ainda não escolhidas (ficam pra depois):
 modo "adivinhe a nota", alternar nota/grau no braço, identificar a escala
 por padrão, posições/caixas (CAGED), acordes diatônicos, tocar a escala
 inteira em sequência (áudio).
 
+- [ ] **Animações/micro-interações** (candidatas discutidas, ainda não
+  priorizadas) — objetivo: deixar a UX mais moderna sem sair de
+  Tailwind/CSS puro (ver decisão abaixo). Em ordem de impacto sugerida:
+  - [x] Feedback de clique na nota (`NoteMarker.tsx`): hoje `playAt` só
+    dispara o som, sem retorno visual — pulse/ripple no próprio círculo
+    ao tocar.
+  - [x] Indicador ativo do `Header` (abas Escala/Jogo): troca de classe
+    instantânea hoje — pill deslizando entre abas.
+
 ## Decisões/aprendizados
+
+- **`useGameStore` usa `configure` único, não `setRoot`/`setScaleType`/
+  `setFretCount` separados**: decisão do usuário ao implementar o Passo 2,
+  pra seguir o mesmo padrão já estabelecido no `useFretboardStore`
+  (um único patch reseta derivado + progresso de uma vez, em vez de
+  repetir a lógica de reset em três ações).
 
 - **Símbolo de sustenido**: usamos `♯` (U+266F, sharp sign musical) em vez
   de `#` (ASCII) em `NOTE_NAMES`. Decisão da Fase 1.1 — manter consistência
@@ -166,6 +222,11 @@ inteira em sequência (áudio).
   guarda o MIDI absoluto de cada corda solta; `tuningMidi[stringIndex] +
   fret` dá o MIDI real da posição (sem `% 12` — aqui se quer o tom
   absoluto, não a classe).
+- **Animação: sem lib nova (GSAP/Framer Motion) por ora** — o projeto já
+  resolve animação com Tailwind + `@keyframes` + `prefers-reduced-motion`
+  (ver `--animate-drift` em `App.css`), então as candidatas da lista
+  acima seguem o mesmo padrão. Só reconsiderar se aparecer orquestração
+  complexa (ex: sequência de notas tocando automaticamente no "Jogo").
 - **Hook de áudio chamado uma vez só, no `Fretboard`**: `useGuitarSoundfont`
   usa `useRef` pra criar o `AudioContext`/`Soundfont` de forma preguiçosa
   (só no primeiro clique, o que também satisfaz a exigência do navegador
@@ -174,3 +235,25 @@ inteira em sequência (áudio).
   instância **por nota**, recarregando as amostras a cada clique em nota
   diferente — por isso o hook vive no `Fretboard` (ancestral comum) e
   `playNote` desce como prop.
+- **Entrada das notas no braço (fade+scale-in) descartada**: tentativa
+  implementada e revertida. Duas animações CSS (`animate-note-enter` +
+  `animate-note-pulse`) no mesmo elemento competiam pela mesma
+  propriedade `animation` (shorthand) — ligar/desligar o pulse trocava
+  qual delas "vencia" a cascata, e o navegador tratava isso como o
+  `animation-name` mudando, reiniciando a animação perdedora do zero
+  (a nota piscava de volta pro estado inicial `opacity:0`/`scale(0.5)`
+  do `note-enter`). Decisão do usuário: a animação de entrada não valia
+  a complexidade/risco de bug pra esse app — descartada, não só adiada.
+- **Transição de rota (View Transitions API) descartada**: tentativa
+  implementada e revertida. O pill do `Header` (já aprovado) parou de
+  deslizar ao trocar de rota — qualquer elemento com `view-transition-name`
+  sai da pintura normal durante a transição e é substituído por um
+  snapshot estático até ela terminar, então o `transition-transform` do
+  pill (que roda no DOM ao vivo) fica invisível nesse meio-tempo, não
+  importa a animação configurada nas pseudo-classes `::view-transition-*`.
+  Confirmado empiricamente forçando a duração pra 3s via JS: o pill já
+  aparecia na posição final no primeiro frame, sem nenhum estágio
+  intermediário. Deixar o `Header` fora de um grupo próprio (cair no
+  `root`) também não resolve — causaria um efeito de "fantasma" (as duas
+  posições do pill cross-fadeando sobrepostas). Decisão do usuário:
+  descartada, não só adiada.

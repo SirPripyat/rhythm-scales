@@ -8,6 +8,7 @@
   --color-glow-amber: #ffb454;
   --color-glow-violet: #8b6bff;
   --color-glow-teal: #2f8f7d;
+  --color-glow-rose: #ea6b7d;
   --color-ink: #f3f2fa;
   --color-ink-dim: #a9a6c2;
   --color-ink-faint: #716e8c;
@@ -26,6 +27,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
   --animate-drift: drift 34s ease-in-out infinite alternate;
+  --animate-note-pulse: note-pulse 380ms ease-out;
 
   @keyframes drift {
     from {
@@ -33,6 +35,18 @@
     }
     to {
       transform: translate3d(2%, -3%, 0) scale(1.06);
+    }
+  }
+
+  @keyframes note-pulse {
+    0% {
+      box-shadow: 0 0 0 0 currentColor;
+    }
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
     }
   }
 }

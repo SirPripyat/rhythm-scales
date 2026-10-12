@@ -1,26 +1,22 @@
 import './App.css';
-import {
-  AmbientBackground,
-  Fretboard,
-  FretboardSubtitles,
-  Header,
-  ScaleExplorer,
-} from '@/components';
+import { BrowserRouter } from 'react-router';
+import { AmbientBackground, Header } from '@/components';
+import { Footer } from '@/components/Footer.tsx';
+import { Routes } from '@/routes';
 
 const App = () => {
   return (
-    <main className={'px-10 py-5 flex flex-col gap-10'}>
-      <AmbientBackground />
+    <BrowserRouter>
+      <main className={'flex flex-col justify-between min-h-dvh'}>
+        <div className={'px-30 py-5 flex flex-col gap-10 h-full'}>
+          <AmbientBackground />
+          <Header />
 
-      <Header />
-
-      <ScaleExplorer />
-
-      <div className={'flex flex-col gap-3'}>
-        <FretboardSubtitles />
-        <Fretboard />
-      </div>
-    </main>
+          <Routes />
+        </div>
+        <Footer />
+      </main>
+    </BrowserRouter>
   );
 };
 export default App;

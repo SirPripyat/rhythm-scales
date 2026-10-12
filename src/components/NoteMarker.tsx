@@ -1,4 +1,5 @@
 import { clsx } from 'clsx';
+import { type AnimationEvent, useState } from 'react';
 import { useFretboardStore } from '@/stores';
 import type { FretboardPosition } from '@/types';
 import { noteNameFromPitchClass } from '@/utils';
@@ -22,6 +23,21 @@ export const NoteMarker = ({
   stringIndex,
 }: NoteMarkerProps) => {
   const playAt = useFretboardStore((s) => s.playAt);
+  const [isPulsing, setIsPulsing] = useState(false);
+
+  const togglePulse = () => setIsPulsing((prev) => !prev);
+
+  const onClick = () => {
+    togglePulse();
+
+    playAt(stringIndex, fret);
+  };
+
+  const onAnimationEnd = (event: AnimationEvent<HTMLButtonElement>) => {
+    if (event.animationName !== 'note-pulse') return;
+
+    togglePulse();
+  };
 
   if (!position) {
     if (fret !== 0 || openPitchClass === undefined) return null;
@@ -37,13 +53,15 @@ export const NoteMarker = ({
     <button
       type="button"
       aria-label={`Tocar ${position.noteName}`}
-      onClick={() => playAt(stringIndex, fret)}
+      onClick={onClick}
+      onAnimationEnd={onAnimationEnd}
       className={clsx(
         'relative z-2 flex size-8 cursor-pointer items-center justify-center rounded-full',
         'border font-mono text-[13px] font-bold backdrop-blur-[6px] transition',
         'after:absolute after:left-1.75 after:top-0.75 after:h-1.25 after:w-2',
         'after:rounded-full after:bg-white/40 after:blur-[2px]',
         position.isRoot ? VARIANT.root : VARIANT.scale,
+        isPulsing ? 'after:animate-note-pulse' : '',
       )}
     >
       {position.noteName}
