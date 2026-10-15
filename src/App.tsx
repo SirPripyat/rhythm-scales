@@ -8,7 +8,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <main className={'flex flex-col justify-between min-h-dvh'}>
-        <div className={'px-30 py-5 flex flex-col gap-10 h-full'}>
+        <div className={'px-40 py-5 flex flex-col gap-10 h-full'}>
           <AmbientBackground />
           <Header />
 

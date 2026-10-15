@@ -58,7 +58,9 @@ export const ConfigurationStep = () => {
             label: `${fret} trastes`,
           }))}
         />
+      </div>
 
+      <div className={'flex items-center justify-end gap-10'}>
         <Button
           onClick={confirmConfig}
           disabled={configConfirmed}

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { DEFAULT_FRET_COUNT } from '@/constants';
-import { positionKey } from '@/stores/useFretboardStore';
+import { DEFAULT_FRET_COUNT, MAX_SPATIAL_ATTEMPTS } from '@/constants';
+import { positionKey } from '@/stores';
 import type { FretboardPosition, ScaleType } from '@/types';
 import { Note } from '@/types';
 import { getFretboardPositions, getScaleNotes, SCALE_INTERVALS } from '@/utils';
@@ -18,6 +18,8 @@ type GameProgress = {
   symbolicCorrectness: boolean[];
   spatialSelected: Map<string, Note>;
   spatialLockedCorrect: Set<string>;
+  spatialWrongKeys: Set<string>;
+  spatialAttempts: number;
   spatialChecked: boolean;
   spatialAllCorrect: boolean;
 };
@@ -51,6 +53,8 @@ const defaultProgress = (): GameProgress => ({
   symbolicCorrectness: [],
   spatialSelected: new Map(),
   spatialLockedCorrect: new Set(),
+  spatialWrongKeys: new Set(),
+  spatialAttempts: 0,
   spatialChecked: false,
   spatialAllCorrect: false,
 });
@@ -111,10 +115,12 @@ export const useGameStore = create<GameState>()((set, get) => ({
       const key = positionKey(stringIndex, fret);
 
       const spatialSelected = new Map(state.spatialSelected);
-
       spatialSelected.set(key, note);
 
-      return { spatialSelected };
+      const spatialWrongKeys = new Set(state.spatialWrongKeys);
+      spatialWrongKeys.delete(key);
+
+      return { spatialSelected, spatialWrongKeys };
     }),
 
   clearSpatialNote: (stringIndex, fret) =>
@@ -124,7 +130,10 @@ export const useGameStore = create<GameState>()((set, get) => ({
       const spatialSelected = new Map(state.spatialSelected);
       spatialSelected.delete(key);
 
-      return { spatialSelected };
+      const spatialWrongKeys = new Set(state.spatialWrongKeys);
+      spatialWrongKeys.delete(key);
+
+      return { spatialSelected, spatialWrongKeys };
     }),
 
   checkSpatial: () =>
@@ -137,21 +146,44 @@ export const useGameStore = create<GameState>()((set, get) => ({
       );
 
       const spatialLockedCorrect = new Set(state.spatialLockedCorrect);
-      const spatialSelected = new Map<string, Note>();
+      const spatialWrongKeys = new Set<string>();
 
       for (const [key, note] of state.spatialSelected) {
         const target = targetKeys.get(key);
         if (target?.pitchClass === note) {
           spatialLockedCorrect.add(key);
-          spatialSelected.set(key, note);
+        } else {
+          spatialWrongKeys.add(key);
         }
       }
 
+      const spatialAttempts = state.spatialAttempts + 1;
+      const allCorrect = spatialLockedCorrect.size === targetKeys.size;
+
+      if (!allCorrect && spatialAttempts >= MAX_SPATIAL_ATTEMPTS) {
+        const spatialSelected = new Map(state.spatialSelected);
+
+        for (const [key, target] of targetKeys) {
+          spatialLockedCorrect.add(key);
+          spatialSelected.set(key, target.pitchClass);
+        }
+
+        return {
+          spatialSelected,
+          spatialLockedCorrect,
+          spatialWrongKeys: new Set<string>(),
+          spatialAttempts,
+          spatialChecked: true,
+          spatialAllCorrect: true,
+        };
+      }
+
       return {
-        spatialSelected,
         spatialLockedCorrect,
+        spatialWrongKeys,
+        spatialAttempts,
         spatialChecked: true,
-        spatialAllCorrect: spatialLockedCorrect.size === targetKeys.size,
+        spatialAllCorrect: allCorrect,
       };
     }),
 
@@ -159,6 +191,8 @@ export const useGameStore = create<GameState>()((set, get) => ({
     set({
       spatialSelected: new Map(),
       spatialLockedCorrect: new Set(),
+      spatialWrongKeys: new Set(),
+      spatialAttempts: 0,
       spatialChecked: false,
       spatialAllCorrect: false,
     }),

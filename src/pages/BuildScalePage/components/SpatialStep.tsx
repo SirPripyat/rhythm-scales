@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { Button } from '@/components';
+import { MAX_SPATIAL_ATTEMPTS } from '@/constants';
 import { useGameStore } from '@/stores';
 import { NOTE_LABELS, SCALE_TYPE_LABELS } from '@/utils';
 import type { Status } from '../types';
@@ -13,6 +14,7 @@ export const SpatialStep = () => {
     spatialAllCorrect,
     spatialChecked,
     spatialLockedCorrect,
+    spatialAttempts,
     spatialTargets,
     scaleType,
     root,
@@ -60,6 +62,10 @@ export const SpatialStep = () => {
         {spatialChecked && (
           <p className="font-mono text-[13px] text-ink-faint">
             {spatialLockedCorrect.size}/{spatialTargets.length} certos
+            {!spatialAllCorrect &&
+              ` · ${MAX_SPATIAL_ATTEMPTS - spatialAttempts} tentativa${
+                MAX_SPATIAL_ATTEMPTS - spatialAttempts === 1 ? '' : 's'
+              } restante${MAX_SPATIAL_ATTEMPTS - spatialAttempts === 1 ? '' : 's'}`}
           </p>
         )}
 
@@ -67,7 +73,7 @@ export const SpatialStep = () => {
           <Button
             hierarchy={'ghosted'}
             onClick={resetSpatial}
-            disabled={isBlocked}
+            disabled={isBlocked || spatialAllCorrect}
           >
             Resetar
           </Button>

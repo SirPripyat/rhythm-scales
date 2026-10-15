@@ -39,6 +39,7 @@ export const SpatialCell = ({
   const {
     spatialSelected,
     spatialLockedCorrect,
+    spatialWrongKeys,
     guessSpatialNote,
     clearSpatialNote,
     scaleNotes,
@@ -58,7 +59,13 @@ export const SpatialCell = ({
         <PickNoteListbox
           value={spatialSelected.get(key) ?? null}
           options={scaleNotes}
-          status={spatialLockedCorrect.has(key) ? 'correct' : 'idle'}
+          status={
+            spatialLockedCorrect.has(key)
+              ? 'correct'
+              : spatialWrongKeys.has(key)
+                ? 'wrong'
+                : 'idle'
+          }
           onChange={(value) => guessSpatialNote(stringIndex, fret, value)}
           onClear={() => clearSpatialNote(stringIndex, fret)}
         />

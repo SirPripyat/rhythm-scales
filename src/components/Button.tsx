@@ -14,8 +14,9 @@ type ButtonProps = ComponentProps<'button'> & {
 const BUTTON_STYLES: Record<ButtonHierarchy, string> = {
   primary:
     'text-ink bg-glow-violet hover:bg-glow-violet/85 disabled:bg-glow-violet/30 disabled:text-ink-faint',
-  secondary: 'bg-secondary',
-  ghosted: 'text-glow-violet hover:bg-glow-violet/10',
+  secondary:
+    'text-glow-violet border border-glow-violet hover:bg-glow-violet/10',
+  ghosted: 'text-glow-violet hover:bg-glow-violet/10 disabled:text-ink-faint',
 };
 
 export const Button = ({
