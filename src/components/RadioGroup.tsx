@@ -23,7 +23,7 @@ export const RadioGroup = ({
     >
       <Label>{label}</Label>
 
-      <div className={'flex gap-2'}>
+      <div className={'flex flex-wrap gap-2'}>
         {options.map(({ value, label }) => (
           <Radio
             key={label}

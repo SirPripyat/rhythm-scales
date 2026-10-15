@@ -15,34 +15,36 @@ export const SpatialFretboard = () => {
 
   const frets = Array.from({ length: fretCount + 1 }, (_, i) => i);
 
-  const columns = `repeat(${fretCount + 1}, 1fr)`;
+  const columns = `repeat(${fretCount + 1}, minmax(2.5rem, 1fr))`;
 
   return (
-    <div
-      className={'relative grid'}
-      style={{
-        gridTemplateColumns: columns,
-        gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
-      }}
-    >
-      {stringIndexes.flatMap((stringIndex) =>
-        frets.map((fret) => {
-          const key = positionKey(stringIndex, fret);
+    <div className="-mx-5 overflow-x-auto px-5">
+      <div
+        className="relative grid min-w-max"
+        style={{
+          gridTemplateColumns: columns,
+          gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
+        }}
+      >
+        {stringIndexes.flatMap((stringIndex) =>
+          frets.map((fret) => {
+            const key = positionKey(stringIndex, fret);
 
-          return (
-            <SpatialCell
-              key={key}
-              fret={fret}
-              stringIndex={stringIndex}
-              isRoot={noteAtStringFret(stringIndex, fret, tuning) === root}
-            />
-          );
-        }),
-      )}
+            return (
+              <SpatialCell
+                key={key}
+                fret={fret}
+                stringIndex={stringIndex}
+                isRoot={noteAtStringFret(stringIndex, fret, tuning) === root}
+              />
+            );
+          }),
+        )}
 
-      {frets.map((fret) => (
-        <FretNumber key={fret} fret={fret} />
-      ))}
+        {frets.map((fret) => (
+          <FretNumber key={fret} fret={fret} />
+        ))}
+      </div>
     </div>
   );
 };

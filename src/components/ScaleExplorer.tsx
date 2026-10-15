@@ -14,7 +14,7 @@ export const ScaleExplorer = () => {
     useFretboardStore();
 
   return (
-    <div className="flex flex-wrap items-end gap-6 rounded-3xl border border-glass-border bg-glass p-5 backdrop-blur-xl">
+    <div className="flex flex-wrap items-end gap-4 rounded-3xl border border-glass-border bg-glass p-4 backdrop-blur-xl sm:gap-6 sm:p-5">
       <RadioGroup
         value={root}
         onChange={(value) => configure({ root: value as Note })}

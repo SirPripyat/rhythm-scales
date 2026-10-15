@@ -60,7 +60,7 @@ export const ConfigurationStep = () => {
         />
       </div>
 
-      <div className={'flex items-center justify-end gap-10'}>
+      <div className={'flex flex-wrap items-center justify-end gap-4'}>
         <Button
           onClick={confirmConfig}
           disabled={configConfirmed}

@@ -22,7 +22,7 @@ export const FretboardSubtitles = () => {
 
   return (
     <div
-      className="flex items-center justify-between font-mono text-[13px]
+      className="flex flex-wrap items-center justify-between gap-3 font-mono text-[13px]
   text-ink-faint"
     >
       <span>

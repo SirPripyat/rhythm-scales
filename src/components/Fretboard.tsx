@@ -13,37 +13,39 @@ export const Fretboard = () => {
     (_, i) => tuning.length - 1 - i,
   );
 
-  const columns = `repeat(${fretCount + 1}, 1fr)`;
+  const columns = `repeat(${fretCount + 1}, minmax(2.5rem, 1fr))`;
 
   return (
-    <div
-      className={
-        'relative grid rounded-3xl border border-glass-border bg-glass px-5 py-6 backdrop-blur-xl'
-      }
-      style={{
-        gridTemplateColumns: columns,
-        gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
-      }}
-    >
-      {stringIndexes.flatMap((stringIndex) =>
-        frets.map((fret) => {
-          const key = positionKey(stringIndex, fret);
+    <div className="rounded-3xl border border-glass-border bg-glass backdrop-blur-xl">
+      <div className="overflow-x-auto px-5 py-6">
+        <div
+          className="relative grid min-w-max"
+          style={{
+            gridTemplateColumns: columns,
+            gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
+          }}
+        >
+          {stringIndexes.flatMap((stringIndex) =>
+            frets.map((fret) => {
+              const key = positionKey(stringIndex, fret);
 
-          return (
-            <FretboardCell
-              key={key}
-              position={positions.get(key)}
-              stringIndex={stringIndex}
-              fret={fret}
-              openPitchClass={noteAtStringFret(stringIndex, fret, tuning)}
-            />
-          );
-        }),
-      )}
+              return (
+                <FretboardCell
+                  key={key}
+                  position={positions.get(key)}
+                  stringIndex={stringIndex}
+                  fret={fret}
+                  openPitchClass={noteAtStringFret(stringIndex, fret, tuning)}
+                />
+              );
+            }),
+          )}
 
-      {frets.map((fret) => (
-        <FretNumber key={fret} fret={fret} />
-      ))}
+          {frets.map((fret) => (
+            <FretNumber key={fret} fret={fret} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

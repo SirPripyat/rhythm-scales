@@ -115,7 +115,7 @@ export const SymbolicStep = () => {
         </div>
       )}
 
-      <div className={'flex gap-4'}>
+      <div className={'flex flex-wrap gap-4'}>
         {symbolicAnswers.map((answer, index) => (
           <NoteListbox
             index={index}
@@ -129,7 +129,7 @@ export const SymbolicStep = () => {
         ))}
       </div>
 
-      <div className={'flex items-center justify-end gap-10'}>
+      <div className={'flex flex-wrap items-center justify-end gap-4'}>
         {symbolicChecked && (
           <p className="font-mono text-[13px] text-ink-faint">
             {correctCount}/{totalAnswerable} certos
