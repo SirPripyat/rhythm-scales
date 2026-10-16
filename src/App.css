@@ -70,7 +70,7 @@
     ),
     radial-gradient(
       30% 28% at 10% 85%,
-      color-mix(in oklab, var(--color-glow-violet) 14%, transparent),
+      color-mix(in oklab, var(--color-glow-rose) 14%, transparent),
       transparent 70%
     );
 }

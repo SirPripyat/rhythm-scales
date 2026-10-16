@@ -6,7 +6,7 @@ const tabClass = ({ isActive }: { isActive: boolean }) =>
   }`;
 
 export const Header = () => {
-  const isGame = useMatch('/build-scale') !== null;
+  const isHome = useMatch('/') !== null;
 
   return (
     <header className="flex flex-wrap items-center justify-between gap-5">
@@ -22,14 +22,14 @@ export const Header = () => {
         <span
           aria-hidden
           className={`absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-glow-amber shadow-root transition-transform duration-500 ease-out motion-reduce:transition-none ${
-            isGame ? 'translate-x-full' : 'translate-x-0'
+            isHome ? 'translate-x-0' : 'translate-x-full'
           }`}
         />
 
         <NavLink to="/" end className={tabClass}>
           Escala
         </NavLink>
-        <NavLink to="/build-scale" end className={tabClass}>
+        <NavLink to="/practice" end className={tabClass}>
           Praticar
         </NavLink>
       </nav>
