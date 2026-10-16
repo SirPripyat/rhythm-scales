@@ -1,6 +1,7 @@
 export * from './CompletionBanner';
 export * from './ConfigurationStep';
 export * from './NoteListbox';
+export * from './SectionTitle';
 export * from './SpatialCell';
 export * from './SpatialFretboard';
 export * from './SpatialStep';

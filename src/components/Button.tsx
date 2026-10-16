@@ -13,10 +13,11 @@ type ButtonProps = ComponentProps<'button'> & {
 
 const BUTTON_STYLES: Record<ButtonHierarchy, string> = {
   primary:
-    'text-ink bg-glow-violet hover:bg-glow-violet/85 disabled:bg-glow-violet/30 disabled:text-ink-faint',
+    'text-ink bg-glow-violet hover:bg-glow-violet/85 disabled:bg-glow-violet/30 disabled:text-ink-faint px-6',
   secondary:
-    'text-glow-violet border border-glow-violet hover:bg-glow-violet/10',
-  ghosted: 'text-glow-violet hover:bg-glow-violet/10 disabled:text-ink-faint',
+    'text-glow-violet border border-glow-violet hover:bg-glow-violet/10 px-6',
+  ghosted:
+    'text-glow-violet hover:bg-glow-violet/10 disabled:text-ink-faint px-3',
 };
 
 export const Button = ({
@@ -28,7 +29,8 @@ export const Button = ({
   return (
     <HeadlessButton
       className={clsx(
-        'cursor-pointer rounded-full px-6 h-10 text-sm font-semibold transition disabled:cursor-not-allowed',
+        'cursor-pointer rounded-full h-10 text-sm font-semibold transition disabled:cursor-not-allowed',
+        'flex items-center gap-1 justify-center',
         BUTTON_STYLES[hierarchy],
       )}
       disabled={isLoading}

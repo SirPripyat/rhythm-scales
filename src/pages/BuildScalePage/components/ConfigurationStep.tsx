@@ -20,7 +20,7 @@ export const ConfigurationStep = () => {
     <div
       className={clsx(
         'rounded-3xl border border-glass-border bg-glass px-5 py-6 backdrop-blur-xl',
-        'flex flex-col gap-6',
+        'flex flex-col gap-6 w-full',
       )}
     >
       <div className={'flex justify-between items-center'}>

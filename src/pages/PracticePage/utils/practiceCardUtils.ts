@@ -13,6 +13,7 @@ export const PRACTICE_CARD_CONTENT: Record<PracticeMode, PracticeCardContent> =
       title: 'Adivinhar a Nota',
       description:
         'Ouça um som e diga de ouvido qual nota é — sem olhar para o braço.',
-      status: 'soon',
+      status: 'new',
+      onLink: '/practice/guess-note',
     },
   };

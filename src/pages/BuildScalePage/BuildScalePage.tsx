@@ -1,16 +1,18 @@
+import { useGameStore } from '@/stores';
 import {
   CompletionBanner,
   ConfigurationStep,
+  SectionTitle,
   SpatialStep,
   SymbolicStep,
-} from '@/pages/BuildScalePage/components';
-import { useGameStore } from '@/stores';
+} from './components';
 
 export const BuildScalePage = () => {
   const spatialAllCorrect = useGameStore((s) => s.spatialAllCorrect);
 
   return (
     <>
+      <SectionTitle />
       <ConfigurationStep />
       <SymbolicStep />
       <SpatialStep />
