@@ -1,4 +1,3 @@
-export * from './arrayUtils';
 export * from './fretboardUtils';
 export * from './fretUtils';
 export * from './notesUtils';

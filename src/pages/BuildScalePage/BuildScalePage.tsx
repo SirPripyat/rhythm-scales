@@ -20,9 +20,11 @@ export const BuildScalePage = () => {
         eyebrow={'Construir escala'}
         glowColor={'amber'}
       />
+
       <ConfigurationStep />
       <SymbolicStep />
       <SpatialStep />
+
       {spatialAllCorrect && <CompletionBanner />}
     </>
   );

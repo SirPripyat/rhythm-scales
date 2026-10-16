@@ -98,11 +98,11 @@ export const useGameStore = createConfigStore<
       }),
 
     checkSymbolic: () => {
-      const { config, derived } = get();
-      const expected = getScaleNotes(config.root, config.scaleType).map(
-        (n) => n.pitchClass,
-      );
-      const symbolicCorrectness = derived.symbolicAnswers.map(
+      const {
+        derived: { scaleNotes: expected, symbolicAnswers },
+      } = get();
+
+      const symbolicCorrectness = symbolicAnswers.map(
         (note, i) => note === expected[i],
       );
       const symbolicAllCorrect = symbolicCorrectness.every(Boolean);

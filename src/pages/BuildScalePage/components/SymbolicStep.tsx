@@ -1,12 +1,10 @@
-import { clsx } from 'clsx';
 import { useState } from 'react';
 import { Button } from '@/components';
 import { useGameStore } from '@/stores';
 import { NOTE_LABELS, SCALE_TYPE_LABELS } from '@/utils';
 import type { Status } from '../types';
 import { NoteListbox, type NoteListboxStatus } from './NoteListbox';
-import { StatusLabel } from './StatusLabel';
-import { Title } from './Title';
+import { StepCard } from './StepCard';
 
 const RETRY_DELAY_MS = 500;
 
@@ -80,19 +78,14 @@ export const SymbolicStep = () => {
   };
 
   return (
-    <div
-      className={clsx(
-        'relative rounded-3xl border border-glass-border bg-glass px-5 py-6 backdrop-blur-xl',
-        'flex flex-col gap-6',
-        isBlocked && 'opacity-50',
-      )}
+    <StepCard
+      status={status}
+      index={2}
+      title={'De cabeça'}
+      blockedMessage={
+        'Escolha a tônica e a escala acima pra liberar esta etapa.'
+      }
     >
-      <div className={'flex justify-between items-center'}>
-        <Title index={2}>De cabeça</Title>
-
-        <StatusLabel status={status} />
-      </div>
-
       <div className={'flex flex-col gap-1'}>
         <h2 className="text-balance font-display text-2xl font-bold text-ink">
           Monte{' '}
@@ -107,14 +100,6 @@ export const SymbolicStep = () => {
           olhar o braço.
         </p>
       </div>
-
-      {isBlocked && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-3xl bg-void/72 p-6 text-center backdrop-blur-[2px]">
-          <p className="max-w-[40ch] font-mono text-[12px] text-ink">
-            Escolha a tônica e a escala acima pra liberar esta etapa.
-          </p>
-        </div>
-      )}
 
       <div className={'flex flex-wrap gap-4'}>
         {symbolicAnswers.map((answer, index) => (
@@ -145,6 +130,6 @@ export const SymbolicStep = () => {
           {getButtonLabel()}
         </Button>
       </div>
-    </div>
+    </StepCard>
   );
 };

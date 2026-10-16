@@ -1,4 +1,4 @@
-export const toOptions = <T extends string>(
+export const toOptions = <T extends string | number>(
   labelRecord: Record<T, string | number>,
 ): { label: string; value: T }[] =>
   (Object.entries(labelRecord) as [T, string | number][]).map(

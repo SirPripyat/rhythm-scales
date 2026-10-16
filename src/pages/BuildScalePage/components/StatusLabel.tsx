@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import type { Status } from '../types';
 
 type StatusLabelProps = {
-  status: 'checked' | 'blocked' | 'inProgress';
+  status: Status;
 };
 
 const STATUS_COLORS: Record<Status, string> = {

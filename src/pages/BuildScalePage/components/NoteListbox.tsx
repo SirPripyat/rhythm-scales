@@ -1,12 +1,8 @@
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOption,
-  ListboxOptions,
-} from '@headlessui/react';
+import { ListboxButton } from '@headlessui/react';
 import { clsx } from 'clsx';
+import { NoteOptionsGrid } from '@/pages/BuildScalePage/components/NoteOptionsGrid.tsx';
 import type { Note } from '@/types';
-import { NOTE_LABELS } from '@/utils';
+import { NOTE_LABELS, toOptions } from '@/utils';
 
 export type NoteListboxStatus = 'idle' | 'correct' | 'wrong' | 'tonic';
 
@@ -35,9 +31,10 @@ export const NoteListbox = ({
   const isDisabled = disabled || status === 'correct' || status === 'tonic';
 
   return (
-    <Listbox
-      value={value === null ? undefined : value}
+    <NoteOptionsGrid
+      value={value}
       onChange={onChange}
+      options={toOptions<Note>(NOTE_LABELS)}
       disabled={isDisabled}
     >
       <div className={'flex flex-col gap-2 items-center'}>
@@ -62,27 +59,6 @@ export const NoteListbox = ({
           </p>
         )}
       </div>
-
-      <ListboxOptions
-        anchor="bottom"
-        className={clsx(
-          'z-30 grid grid-cols-4 gap-1.5 rounded-2xl border border-white/26 p-2 bg-[rgba(18,16,30,0.92)]',
-          'backdrop-blur-[28px] [--anchor-gap:8px] focus:outline-none',
-        )}
-      >
-        {Object.entries(NOTE_LABELS).map(([value, label]) => (
-          <ListboxOption
-            key={value}
-            value={Number(value)}
-            className={clsx(
-              'flex size-9 cursor-pointer items-center justify-center rounded-lg font-mono text-[12px] text-ink-dim',
-              'data-focus:bg-white/9 data-focus:text-ink',
-            )}
-          >
-            {label}
-          </ListboxOption>
-        ))}
-      </ListboxOptions>
-    </Listbox>
+    </NoteOptionsGrid>
   );
 };
