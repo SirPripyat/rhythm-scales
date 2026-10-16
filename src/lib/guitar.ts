@@ -19,3 +19,12 @@ export const playGuitarNote = (midiNote: number) => {
 
   guitar.start({ note: midiNote });
 };
+
+export const playGuitarNotesInSequence = (
+  notes: number[],
+  gapMs: number = 700,
+) => {
+  notes.forEach((note, index) => {
+    setTimeout(() => playGuitarNote(note), gapMs * index);
+  });
+};

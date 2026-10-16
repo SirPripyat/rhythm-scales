@@ -37,89 +37,61 @@ real do usuário: treinar teoria musical na prática, não só visualizar.
   CDN. Só notas que pertencem à escala atual são clicáveis (decisão do
   usuário — nota de corda solta fora da escala é só informativa).
 
+- [x] **Jogo "Montar a escala"** (`BuildScalePage`, rota
+  `/practice/build-scale`) — **completo**. Protótipo clicável discutido
+  antes de implementar: https://claude.ai/artifact/T6FH6SdjzMBzHTiVE64PEy
+  (reflete só a v1 da mecânica espacial — a versão final mudou, ver
+  Decisões/aprendizados). Mecânica final, numa página só (seções
+  desbloqueando conforme o usuário avança):
+  1. **Config** (`ConfigurationStep`): tônica, escala, nº de trastes.
+     Precisa `confirmConfig()` pra travar e liberar o resto.
+  2. **Etapa simbólica** (`SymbolicStep`): monta de cabeça a sequência de
+     notas a partir do root, valida contra `getScaleNotes`. Feedback só
+     no fim (`checkSymbolic`), não por grau.
+  3. **Etapa espacial** (`SpatialStep`/`SpatialFretboard`/`SpatialCell`):
+     só libera depois da simbólica 100% correta. Mecânica final **não é
+     marcar a posição** (ideia original) — é **escolher a nota certa por
+     dropdown** (`PickNoteListbox`) em cada posição que pertence à escala
+     até o traste escolhido, cordas soltas incluídas. Tônica é dada de
+     graça (`TonicCell`, não clicável). Até `MAX_SPATIAL_ATTEMPTS` (3)
+     tentativas (`checkSpatial`); na última tentativa errada o jogo
+     resolve sozinho e marca tudo como correto (evita frustração sem
+     solução).
+  4. `CompletionBanner` quando a etapa espacial fecha 100%.
+  - Store: `useGameStore`, construído com a mesma fábrica genérica
+    `createConfigStore` que o `useFretboardStore` usa (ver Decisões).
+
 ## Passo atual
 
-**Feature em andamento: segunda tela — jogo "Montar a escala".**
+**Próxima feature: "Adivinhar a nota" (treino de ouvido),
+`GuessNotePage` (rota `/practice/guess-note`).**
 
-Protótipo clicável discutido antes de implementar:
-https://claude.ai/artifact/T6FH6SdjzMBzHTiVE64PEy (ainda reflete a v1 da
-mecânica da etapa espacial — ver nota de atualização abaixo).
+Hoje é só um shell: `SectionIntro` com o texto de introdução, sem
+lógica, sem `components/`, sem store próprio. Já está linkada no hub
+`PracticePage` com a tag "Novo".
 
-Mecânica (decisão do usuário): dado um root e uma escala (`ScaleType`)
-escolhidos pelo usuário, o jogo tem duas etapas em sequência, **numa
-página só** (sem trocar de tela entre elas — as seções ficam todas
-presentes, desbloqueando conforme o usuário avança, em vez de esconder
-umas pras mostrar outras) —
+Mecânica descrita na própria intro da página (ainda não implementada):
+toca o som de uma nota (reaproveitando `playGuitarNote`/soundfont já
+usado no `Fretboard`), o usuário ouve sem ver o braço e escolhe de
+ouvido qual nota é. A cada rodada, uma nota nova.
 
-1. **Etapa simbólica**: usuário monta de cabeça a sequência de notas da
-   escala a partir do root (sem olhar o braço), baseado no padrão da
-   escala de Dó. Valida contra `getScaleNotes(root, scaleType)`, que já
-   existe e dá exatamente `{ degree, pitchClass, noteName }[]` pra cada
-   grau (grau 1 = tônica, já dado).
-2. **Etapa espacial** (regra atualizada — substitui a ideia anterior de
-   "caixa ascendente"): só depois da etapa 1 completa e correta, o
-   usuário escolhe a quantidade de trastes (reaproveitando `FRET_OPTIONS`,
-   igual ao `ScaleExplorer`) e precisa marcar **todas** as posições da
-   escala no braço inteiro até esse traste — incluindo as cordas soltas
-   (traste 0). A tônica continua dada de graça (marcada, não clicável);
-   o resto das posições (a mesma nota pode aparecer em várias oitavas) o
-   usuário precisa achar todas, não só uma. Vantagem grande dessa troca:
-   o alvo é exatamente o que `getFretboardPositions(root, scaleType,
-   fretCount, tuning)` já calcula — **nenhum algoritmo novo é
-   necessário**, e some o problema do salto de trastes que o protótipo
-   v1 expôs (não tinha solução boa dentro da ideia de "uma posição
-   específica por grau").
-
-Navegação: **React Router** (rotas reais, ex. `/` pra tela Escala atual,
-`/jogo` pra essa tela nova) — decisão do usuário, mesmo sendo a primeira
-dependência nova desde o início do projeto nessa categoria (as outras —
-Headless UI, smplr — foram por leveza/necessidade pontual; aqui é porque o
-app passa a ser multi-tela de verdade).
-
-Passos planejados (um por vez, ciclo curto por passo):
-- [x] **Passo 1 — Roteamento**: `react-router` instalado, `App.tsx`
-  envolvido com `BrowserRouter`, conteúdo anterior extraído pra
-  `ScalePage` (rota `/`), `BuildScalePage` placeholder criado (rota
-  `/build-scale`), navegação no `Header` com `NavLink`.
-- [x] **Passo 2 — Store do jogo** (`useGameStore`, mesmo padrão do
-  `useFretboardStore`: config + estado derivado):
-  - `root`, `scaleType`, `fretCount` (escolhidos pelo usuário; trocar
-    qualquer um reseta as respostas, igual o `configure` do fretboard
-    reseta `positions`).
-  - `symbolicAnswers: (Note | null)[]` — tamanho dinâmico
-    (`SCALE_INTERVALS[scaleType].length`, não fixo em 7 — pentatônica
-    tem 5, blues 6), índice 0 = grau 1 = root, sempre preenchido.
-  - `symbolicChecked`, `symbolicAllCorrect` — setados só por
-    `checkSymbolic()` (feedback é só no final, não por grau).
-  - `spatialTargets` — derivado via `getFretboardPositions(root,
-    scaleType, fretCount)` filtrando fora `isRoot` (essas são de graça).
-  - `spatialSelected: Set<string>` (chave `"stringIndex-fret"`,
-    tentativa atual), `spatialLockedCorrect: Set<string>` (acertos que
-    persistem entre tentativas), `spatialChecked`, `spatialAllCorrect`.
-  - Ações: `configure` (patch de `root`/`scaleType`/`fretCount`, reseta
-    derivado + progresso — substitui a ideia original de `setRoot`/
-    `setScaleType`/`setFretCount` separados, ver Decisões/aprendizados),
-    `answerSymbolic`, `checkSymbolic`, `toggleSpatialCell`, `checkSpatial`,
-    `reset`.
-- [ ] **Passo 3 — Página única do jogo** (`BuildScalePage`), seções
-  empilhadas na mesma página (não telas separadas):
-  1. config (tônica/escala/trastes — reaproveita visual do
-     `ScaleExplorer`/`SelectField`);
-  2. etapa simbólica (slots por grau, desabilitada até root+escala
-     escolhidos);
-  3. etapa espacial (braço em modo "quiz" até o traste escolhido,
-     incluindo traste 0 — variante do `Fretboard`/`FretboardCell` que
-     aceita clique como resposta em vez de só mostrar o resultado),
-     desabilitada até a etapa 1 estar correta;
-  4. mensagem de conclusão quando a etapa espacial fecha 100%.
-- [ ] **Passo 4 — Feedback visual + fluxo de "tentar de novo"**: anéis de
-  acerto/erro, contadores, revelar posições que faltaram — já prototipado
-  (link acima), portar o comportamento pro componente real.
+Decisões de design ainda **a tomar com o usuário** antes de implementar
+(não assumir):
+- Universo de notas por rodada: as 12 cromáticas, ou restrito à escala
+  configurada em algum lugar (como no "Montar a escala")?
+- Como escolher/tocar a nota: um oitava fixa, ou variando corda/traste
+  como nas posições do braço (`getFretboardPositions`)?
+- Formato da resposta: grid de botões (como `NoteOptionsGrid`, já existe
+  no `BuildScalePage`) vs. outro input?
+- Pontuação/tentativas: segue o mesmo padrão de "até N tentativas, depois
+  revela" do jogo espacial, ou é diferente (ex. sem revelar, só avança)?
+- Precisa de store dedicado (`useGuessNoteStore`, mesma fábrica
+  `createConfigStore`) ou é estado local da página?
 
 Outras candidatas discutidas, ainda não escolhidas (ficam pra depois):
-modo "adivinhe a nota", alternar nota/grau no braço, identificar a escala
-por padrão, posições/caixas (CAGED), acordes diatônicos, tocar a escala
-inteira em sequência (áudio).
+alternar nota/grau no braço, identificar a escala por padrão,
+posições/caixas (CAGED), acordes diatônicos, tocar a escala inteira em
+sequência (áudio), modos gregos (1.2b, adiado desde a Fase 1).
 
 - [ ] **Animações/micro-interações** (candidatas discutidas, ainda não
   priorizadas) — objetivo: deixar a UX mais moderna sem sair de
@@ -257,3 +229,23 @@ inteira em sequência (áudio).
   `root`) também não resolve — causaria um efeito de "fantasma" (as duas
   posições do pill cross-fadeando sobrepostas). Decisão do usuário:
   descartada, não só adiada.
+- **App rebatizado "Scalewise"** e navegação reestruturada em hub: rota
+  `/practice` (`PracticePage`) virou uma tela intermediária com cards
+  (`PracticeCard`) pra cada modo de treino, em vez de ir direto pra uma
+  tela de jogo fixa. `Header` só mostra duas abas de alto nível (Escala/
+  Praticar); as páginas de jogo (`/practice/build-scale`,
+  `/practice/guess-note`) ficam um nível abaixo, sem aba própria no
+  `Header`.
+- **`createConfigStore` generalizado**: a fábrica criada originalmente
+  pro `useFretboardStore` (config + estado derivado) foi reaproveitada
+  tal qual pro `useGameStore` — confirma que o padrão "um `configure`
+  único reseta derivado + progresso" (ver primeira decisão deste arquivo)
+  generaliza bem pra qualquer tela nova desse tipo.
+- **Mecânica da etapa espacial mudou de "marcar posição" pra "escolher
+  nota por dropdown"**: a ideia original descrita no protótipo v1
+  (clicar pra marcar uma posição como pertencente à escala) foi trocada
+  por escolher a nota certa via `PickNoteListbox` em cada posição válida.
+  Ganha precisão (o usuário prova que sabe *qual* nota é, não só que ali
+  "tem uma nota da escala") e abre o conceito de tentativas limitadas
+  (`MAX_SPATIAL_ATTEMPTS = 3`, com auto-resolução amigável na última
+  tentativa errada, em vez de travar o usuário sem saída).

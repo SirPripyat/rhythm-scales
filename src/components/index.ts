@@ -1,6 +1,7 @@
 export * from './AmbientBackground';
 export * from './Button';
 export * from './CellShell';
+export * from './Chip';
 export * from './FretboardGrid';
 export * from './FretNumber';
 export * from './GuitarString';
