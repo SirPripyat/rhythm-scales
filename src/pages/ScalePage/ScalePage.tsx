@@ -1,4 +1,4 @@
-import { Fretboard, FretboardSubtitles, ScaleExplorer } from '@/components';
+import { Fretboard, FretboardSubtitles, ScaleExplorer } from './components';
 
 export const ScalePage = () => {
   return (

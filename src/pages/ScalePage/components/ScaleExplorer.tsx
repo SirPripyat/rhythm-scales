@@ -1,5 +1,4 @@
-import { RadioGroup } from '@/components';
-import { SelectField } from '@/components/SelectField.tsx';
+import { RadioGroup, SelectField } from '@/components';
 import { useFretboardStore } from '@/stores';
 import type { Note, ScaleType } from '@/types';
 import {

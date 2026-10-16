@@ -1,12 +1,13 @@
+import { FretNumber } from '@/components';
 import { positionKey, useFretboardStore } from '@/stores';
 import { noteAtStringFret } from '@/utils';
 import { FretboardCell } from './FretboardCell';
-import { FretNumber } from './FretNumber';
 
 export const Fretboard = () => {
   const { fretCount, tuning, positions } = useFretboardStore();
 
   const frets = Array.from({ length: fretCount + 1 }, (_, fret) => fret);
+
   // a corda mais aguda (maior índice) fica no topo
   const stringIndexes = Array.from(
     { length: tuning.length },

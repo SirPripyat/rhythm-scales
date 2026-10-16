@@ -1,5 +1,5 @@
-import type { FretboardPosition } from '@/types';
-import { GuitarString } from './GuitarString';
+import type { FretboardPosition } from 'src/types';
+import { GuitarString } from '@/components';
 import { NoteMarker } from './NoteMarker';
 
 type FretboardCellProps = {

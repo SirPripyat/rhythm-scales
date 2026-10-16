@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { NavLink, useMatch } from 'react-router';
 
 const tabClass = ({ isActive }: { isActive: boolean }) =>
@@ -11,9 +12,11 @@ export const Header = () => {
   return (
     <header className="flex flex-wrap items-center justify-between gap-5">
       <h1
-        className="text-balance bg-linear-to-r from-white from-40% via-glow-violet
-  via-78% to-glow-amber bg-clip-text font-display text-3xl font-bold text-transparent
-  sm:text-4xl md:text-5xl"
+        className={clsx(
+          'text-balance bg-linear-to-r from-white from-40% via-glow-violet via-78%',
+          'to-white to-40% bg-clip-text font-display text-3xl font-bold text-transparent',
+          'sm:text-4xl md:text-5xl',
+        )}
       >
         Scalewise
       </h1>
