@@ -3,7 +3,9 @@ import { NOTE_LABELS, SCALE_TYPE_LABELS, TUNINGS_LABELS } from '@/utils';
 import { Swatch } from './Swatch';
 
 export const FretboardSubtitles = () => {
-  const { root, tuningKey, scaleType } = useFretboardStore();
+  const {
+    config: { root, tuningKey, scaleType },
+  } = useFretboardStore();
 
   return (
     <div

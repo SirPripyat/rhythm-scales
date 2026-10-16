@@ -4,7 +4,10 @@ import { useGameStore } from '@/stores';
 import { NOTE_LABELS, SCALE_TYPE_LABELS } from '@/utils';
 
 export const CompletionBanner = () => {
-  const { root, scaleType, reset } = useGameStore();
+  const {
+    config: { root, scaleType },
+    reset,
+  } = useGameStore();
 
   return (
     <div

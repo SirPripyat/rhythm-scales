@@ -4,15 +4,18 @@ import { StatusLabel } from '@/pages/BuildScalePage/components/StatusLabel.tsx';
 import { Title } from '@/pages/BuildScalePage/components/Title.tsx';
 import { useGameStore } from '@/stores';
 import type { Note, ScaleType } from '@/types';
-import { FRET_OPTIONS, NOTE_LABELS, SCALE_TYPE_LABELS } from '@/utils';
+import {
+  FRET_OPTIONS,
+  NOTE_LABELS,
+  SCALE_TYPE_LABELS,
+  toOptions,
+} from '@/utils';
 
 export const ConfigurationStep = () => {
   const {
-    root,
-    scaleType,
-    fretCount,
+    config: { root, scaleType, fretCount },
     configure,
-    configConfirmed,
+    progress: { configConfirmed },
     confirmConfig,
   } = useGameStore();
 
@@ -33,20 +36,14 @@ export const ConfigurationStep = () => {
           value={root}
           onChange={(root) => configure({ root: root as Note })}
           label={'Tônica'}
-          options={Object.entries(NOTE_LABELS).map(([value, label]) => ({
-            value,
-            label,
-          }))}
+          options={toOptions(NOTE_LABELS)}
         />
 
         <SelectField
           value={scaleType}
           onChange={(value) => configure({ scaleType: value as ScaleType })}
           label={'Escala'}
-          options={Object.entries(SCALE_TYPE_LABELS).map(([value, label]) => ({
-            value,
-            label,
-          }))}
+          options={toOptions(SCALE_TYPE_LABELS)}
         />
 
         <SelectField

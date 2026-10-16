@@ -1,50 +1,31 @@
-import { FretNumber } from '@/components';
+import { FretboardGrid } from '@/components';
 import { positionKey, useGameStore } from '@/stores';
 import { noteAtStringFret, TUNINGS } from '@/utils';
 import { SpatialCell } from './SpatialCell';
 
-const tuning = TUNINGS.standard;
-
-const stringIndexes = Array.from(
-  { length: tuning.length },
-  (_, i) => tuning.length - 1 - i,
-);
-
 export const SpatialFretboard = () => {
-  const { fretCount, root } = useGameStore();
-
-  const frets = Array.from({ length: fretCount + 1 }, (_, i) => i);
-
-  const columns = `repeat(${fretCount + 1}, minmax(2.5rem, 1fr))`;
+  const {
+    config: { fretCount, root },
+  } = useGameStore();
 
   return (
-    <div className="-mx-5 overflow-x-auto px-5">
-      <div
-        className="relative grid min-w-max"
-        style={{
-          gridTemplateColumns: columns,
-          gridTemplateRows: `repeat(${tuning.length}, 1fr) auto`,
-        }}
-      >
-        {stringIndexes.flatMap((stringIndex) =>
-          frets.map((fret) => {
-            const key = positionKey(stringIndex, fret);
+    <FretboardGrid
+      fretCount={fretCount}
+      tuning={TUNINGS.standard}
+      renderCell={(stringIndex, fret) => {
+        const key = positionKey(stringIndex, fret);
 
-            return (
-              <SpatialCell
-                key={key}
-                fret={fret}
-                stringIndex={stringIndex}
-                isRoot={noteAtStringFret(stringIndex, fret, tuning) === root}
-              />
-            );
-          }),
-        )}
-
-        {frets.map((fret) => (
-          <FretNumber key={fret} fret={fret} />
-        ))}
-      </div>
-    </div>
+        return (
+          <SpatialCell
+            key={key}
+            fret={fret}
+            stringIndex={stringIndex}
+            isRoot={
+              noteAtStringFret(stringIndex, fret, TUNINGS.standard) === root
+            }
+          />
+        );
+      }}
+    />
   );
 };

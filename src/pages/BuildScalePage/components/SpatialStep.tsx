@@ -10,15 +10,15 @@ import { Title } from './Title';
 
 export const SpatialStep = () => {
   const {
-    symbolicAllCorrect,
-    spatialAllCorrect,
-    spatialChecked,
-    spatialLockedCorrect,
-    spatialAttempts,
-    spatialTargets,
-    scaleType,
-    root,
-    fretCount,
+    config: { scaleType, root, fretCount },
+    derived: { spatialTargets },
+    progress: {
+      symbolicAllCorrect,
+      spatialAllCorrect,
+      spatialChecked,
+      spatialLockedCorrect,
+      spatialAttempts,
+    },
     checkSpatial,
     resetSpatial,
   } = useGameStore();

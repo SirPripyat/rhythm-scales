@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import { GuitarString } from '@/components';
+import { CellShell } from '@/components';
 import { positionKey, useGameStore } from '@/stores';
 import type { Note } from '@/types';
 import { NOTE_LABELS } from '@/utils';
@@ -12,7 +12,9 @@ type SpatialCellProps = {
 };
 
 const TonicCell = () => {
-  const { root } = useGameStore();
+  const {
+    config: { root },
+  } = useGameStore();
 
   return (
     <div
@@ -34,25 +36,16 @@ export const SpatialCell = ({
   stringIndex,
   isRoot,
 }: SpatialCellProps) => {
-  const isNut = fret === 1;
   const key = positionKey(stringIndex, fret);
   const {
-    spatialSelected,
-    spatialLockedCorrect,
-    spatialWrongKeys,
+    progress: { spatialSelected, spatialLockedCorrect, spatialWrongKeys },
+    derived: { scaleNotes },
     guessSpatialNote,
     clearSpatialNote,
-    scaleNotes,
   } = useGameStore();
 
   return (
-    <div className="relative flex h-10 items-center justify-center border-r border-glass-border">
-      {isNut && (
-        <span className="absolute inset-y-0.5 left-0 w-0.75 rounded-full bg-linear-to-b from-white to-white/50 shadow-nut" />
-      )}
-
-      {fret !== 0 && <GuitarString stringIndex={stringIndex} />}
-
+    <CellShell fret={fret} stringIndex={stringIndex}>
       {isRoot ? (
         <TonicCell />
       ) : (
@@ -70,6 +63,6 @@ export const SpatialCell = ({
           onClear={() => clearSpatialNote(stringIndex, fret)}
         />
       )}
-    </div>
+    </CellShell>
   );
 };

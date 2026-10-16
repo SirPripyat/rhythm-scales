@@ -12,13 +12,14 @@ const RETRY_DELAY_MS = 500;
 
 export const SymbolicStep = () => {
   const {
-    configConfirmed,
-    symbolicAllCorrect,
-    symbolicChecked,
-    symbolicCorrectness,
-    root,
-    scaleType,
-    symbolicAnswers,
+    config: { root, scaleType },
+    derived: { symbolicAnswers },
+    progress: {
+      configConfirmed,
+      symbolicAllCorrect,
+      symbolicChecked,
+      symbolicCorrectness,
+    },
     answerSymbolic,
     checkSymbolic,
   } = useGameStore();

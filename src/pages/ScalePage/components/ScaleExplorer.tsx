@@ -6,11 +6,14 @@ import {
   NOTE_LABELS,
   SCALE_TYPE_LABELS,
   TUNINGS_LABELS,
+  toOptions,
 } from '@/utils';
 
 export const ScaleExplorer = () => {
-  const { root, scaleType, tuningKey, fretCount, configure } =
-    useFretboardStore();
+  const {
+    config: { root, scaleType, tuningKey, fretCount },
+    configure,
+  } = useFretboardStore();
 
   return (
     <div className="flex flex-wrap items-end gap-4 rounded-3xl border border-glass-border bg-glass p-4 backdrop-blur-xl sm:gap-6 sm:p-5">
@@ -18,29 +21,20 @@ export const ScaleExplorer = () => {
         value={root}
         onChange={(value) => configure({ root: value as Note })}
         label={'Tônica'}
-        options={Object.entries(NOTE_LABELS).map(([value, label]) => ({
-          value,
-          label,
-        }))}
+        options={toOptions(NOTE_LABELS)}
       />
 
       <SelectField
         label={'Escala'}
         value={scaleType}
         onChange={(value) => configure({ scaleType: value as ScaleType })}
-        options={Object.entries(SCALE_TYPE_LABELS).map(([value, label]) => ({
-          value,
-          label,
-        }))}
+        options={toOptions(SCALE_TYPE_LABELS)}
       />
       <SelectField
         label={'Afinação'}
         value={tuningKey}
         onChange={(value) => configure({ tuningKey: value })}
-        options={Object.entries(TUNINGS_LABELS).map(([value, label]) => ({
-          value,
-          label,
-        }))}
+        options={toOptions(TUNINGS_LABELS)}
       />
       <SelectField
         label={'Qtd. Trastes'}

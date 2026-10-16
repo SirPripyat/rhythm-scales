@@ -1,4 +1,3 @@
-import { create } from 'zustand';
 import { DEFAULT_FRET_COUNT } from '@/constants';
 import { playGuitarNote } from '@/lib';
 import {
@@ -8,6 +7,7 @@ import {
   type Tuning,
 } from '@/types';
 import { getFretboardPositions, TUNINGS, TUNINGS_MIDI } from '@/utils';
+import { createConfigStore } from './createConfigStore';
 
 export type FretboardConfig = {
   fretCount: number;
@@ -16,11 +16,13 @@ export type FretboardConfig = {
   scaleType: ScaleType;
 };
 
-type FretboardState = FretboardConfig & {
+type FretboardDerived = {
   tuning: Tuning;
   tuningMidi: number[];
   positions: ReadonlyMap<string, FretboardPosition>;
-  configure: (patch: Partial<FretboardConfig>) => void;
+};
+
+type FretboardActions = {
   playAt: (stringIndex: number, fret: number) => void;
 };
 
@@ -31,52 +33,38 @@ const DEFAULT_FRETBOARD_CONFIG: FretboardConfig = {
   scaleType: 'major',
 };
 
-const resolveTuning = (tuningKey: keyof typeof TUNINGS) => ({
-  tuning: TUNINGS[tuningKey],
-  tuningMidi: TUNINGS_MIDI[tuningKey],
-});
-
-const deriveState = (config: FretboardConfig) => {
-  const resolvedTuning = resolveTuning(config.tuningKey);
-
-  const positions = buildPositions({
-    ...config,
-    tuning: resolvedTuning.tuning,
-  });
-
-  return {
-    positions,
-    tuning: resolvedTuning.tuning,
-    tuningMidi: resolvedTuning.tuningMidi,
-  };
-};
-
 export const positionKey = (stringIndex: number, fret: number) =>
   `${stringIndex}-${fret}`;
 
-const buildPositions = ({
-  root,
-  scaleType,
-  fretCount,
-  tuning,
-}: Omit<FretboardConfig, 'tuningKey'> & { tuning: Tuning }) =>
-  new Map(
-    getFretboardPositions(root, scaleType, fretCount, tuning).map(
+const deriveState = (config: FretboardConfig): FretboardDerived => {
+  const tuning = TUNINGS[config.tuningKey];
+  const tuningMidi = TUNINGS_MIDI[config.tuningKey];
+
+  const positions = new Map(
+    getFretboardPositions(
+      config.root,
+      config.scaleType,
+      config.fretCount,
+      tuning,
+    ).map(
       (position) =>
         [positionKey(position.stringIndex, position.fret), position] as const,
     ),
   );
 
-export const useFretboardStore = create<FretboardState>()((set, get) => ({
-  ...DEFAULT_FRETBOARD_CONFIG,
-  ...deriveState(DEFAULT_FRETBOARD_CONFIG),
+  return { tuning, tuningMidi, positions };
+};
 
-  configure: (patch) =>
-    set((state) => ({
-      ...patch,
-      ...deriveState({ ...state, ...patch }),
-    })),
-
-  playAt: (stringIndex, fret) =>
-    playGuitarNote(get().tuningMidi[stringIndex] + fret),
-}));
+export const useFretboardStore = createConfigStore<
+  FretboardConfig,
+  FretboardDerived,
+  Record<string, never>,
+  FretboardActions
+>({
+  defaultConfig: DEFAULT_FRETBOARD_CONFIG,
+  deriveState,
+  actions: (_set, get) => ({
+    playAt: (stringIndex, fret) =>
+      playGuitarNote(get().derived.tuningMidi[stringIndex] + fret),
+  }),
+});
