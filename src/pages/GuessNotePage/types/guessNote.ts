@@ -7,3 +7,5 @@ export type GuessNoteDegree = {
   label: string; // Nome em solfejo: Dó, Mi
   hint: string; // dica de memorização
 };
+
+export type GuessNotePhase = 'idle' | 'waiting' | 'correct' | 'incorrect';

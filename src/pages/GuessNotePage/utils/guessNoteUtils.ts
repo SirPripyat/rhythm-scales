@@ -12,13 +12,13 @@ type DiatonicNote = Exclude<
 >;
 
 const SOLFEGE_HINTS: Record<DiatonicNote, string> = {
-  [Note.C]: 'casa, repouso',
-  [Note.D]: 'passagem, sobe',
-  [Note.E]: 'doce, suave',
-  [Note.F]: 'tensão leve',
-  [Note.G]: 'estável, aberto',
-  [Note.A]: 'nostálgica',
-  [Note.B]: 'tensa, quer resolver',
+  [Note.C]: 'Casa, repouso',
+  [Note.D]: 'Passagem, sobe',
+  [Note.E]: 'Doce, suave',
+  [Note.F]: 'Tensão leve',
+  [Note.G]: 'Estável, aberto',
+  [Note.A]: 'Nostálgica',
+  [Note.B]: 'Tensa, quer resolver',
 };
 
 export const GUESS_NOTE_DEGREES: GuessNoteDegree[] = getScaleNotes(

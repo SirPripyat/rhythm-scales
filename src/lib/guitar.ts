@@ -12,19 +12,32 @@ const getGuitar = () => {
   return { context, guitar };
 };
 
-export const playGuitarNote = (midiNote: number) => {
+export const playGuitarNote = async (midiNote: number) => {
   const { context, guitar } = getGuitar();
 
-  if (context.state === 'suspended') void context.resume();
+  if (context.state === 'suspended') await context.resume();
+  await guitar.ready;
 
   guitar.start({ note: midiNote });
 };
 
-export const playGuitarNotesInSequence = (
+export const playGuitarNotesInSequence = async (
   notes: number[],
   gapMs: number = 700,
+  onDone?: () => void,
 ) => {
+  const { context, guitar } = getGuitar();
+
+  if (context.state === 'suspended') await context.resume();
+  await guitar.ready;
+
+  const startTime = context.currentTime;
+
   notes.forEach((note, index) => {
-    setTimeout(() => playGuitarNote(note), gapMs * index);
+    guitar.start({ note, time: startTime + (gapMs * index) / 1000 });
   });
+
+  if (onDone) {
+    setTimeout(onDone, gapMs * (notes.length - 1) + 600);
+  }
 };
