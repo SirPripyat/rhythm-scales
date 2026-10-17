@@ -56,7 +56,7 @@ export const CorrectPhasePanel = () => {
         Rodada {round}
       </div>
 
-      <div className={'flex items-center justify-center gap-3'}>
+      <div className={'flex flex-wrap items-center justify-center gap-3'}>
         {options.map((note) => (
           <PickNote key={note.note} note={note} phase={phase} />
         ))}

@@ -41,7 +41,11 @@ export const WaitingPhasePanel = () => {
           </p>
         </div>
 
-        <div className={'mt-4 flex gap-4 items-center justify-center'}>
+        <div
+          className={
+            'mt-4 flex flex-col gap-2 items-stretch w-full sm:flex-row sm:gap-4 sm:items-center sm:justify-center sm:w-auto'
+          }
+        >
           <Button hierarchy={'secondary'} onClick={replay} disabled={isPlaying}>
             <ArrowPathIcon className={'size-4'} />
             Ouvir de novo
@@ -66,7 +70,7 @@ export const WaitingPhasePanel = () => {
         Rodada {round}
       </div>
 
-      <div className={'flex items-center justify-center gap-3'}>
+      <div className={'flex flex-wrap items-center justify-center gap-3'}>
         {options.map((note) => (
           <PickNote key={note.note} note={note} phase={phase} />
         ))}

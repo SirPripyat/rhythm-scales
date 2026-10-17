@@ -12,8 +12,8 @@ export const GuessNoteLevelPanel = () => {
   } = useGuessNoteStore();
 
   return (
-    <div className={'flex justify-between items-center'}>
-      <div className={'flex gap-2'}>
+    <div className={'flex flex-wrap justify-between items-center gap-3'}>
+      <div className={'flex flex-wrap gap-2'}>
         {GUESS_NOTE_LEVEL_OPTIONS.map(({ id, label }) => (
           <Chip
             key={id}

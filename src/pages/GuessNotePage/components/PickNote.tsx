@@ -23,7 +23,7 @@ export const PickNote = ({ note, phase }: PickNoteProps) => {
       onClick={() => chooseAnswer(note.note)}
       className={clsx(
         'cursor-pointer flex flex-col gap-1 items-center justify-center border border-glass-border bg-glass',
-        'rounded-2xl h-20 w-30 enabled:hover:border-glow-teal transition disabled:cursor-not-allowed',
+        'rounded-2xl h-20 flex-1 min-w-24 enabled:hover:border-glow-teal transition disabled:cursor-not-allowed',
         !isRevealed && 'disabled:opacity-50',
         isCorrect && 'border-glow-teal bg-glow-teal/22',
         isWrongChoice && 'border-glow-rose bg-glow-rose/22',
