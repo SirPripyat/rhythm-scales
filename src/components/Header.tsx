@@ -14,7 +14,7 @@ export const Header = () => {
       <h1
         className={clsx(
           'text-balance bg-linear-to-r from-white from-40% via-glow-violet via-78%',
-          'to-white to-40% bg-clip-text font-display text-3xl font-bold text-transparent',
+          'to-glow-amber bg-clip-text font-display text-3xl font-bold text-transparent',
           'sm:text-4xl md:text-5xl',
         )}
       >
