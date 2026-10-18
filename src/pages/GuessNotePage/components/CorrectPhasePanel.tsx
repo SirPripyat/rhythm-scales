@@ -1,5 +1,3 @@
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { clsx } from 'clsx';
 import { Button, Card } from '@/components';
 import { NOTE_SOLFEGE_LABELS } from '@/utils';
 import { useGuessNoteStore } from '../stores';

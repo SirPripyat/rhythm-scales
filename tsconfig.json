@@ -8,9 +8,8 @@
     "types": ["@rsbuild/core/types", "node"],
     "useDefineForClassFields": true,
 
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
 
     "moduleDetection": "force",
