@@ -83,6 +83,20 @@ export const useGuessNoteStore = createConfigStore<
     const setPlaying = (isPlaying: boolean) =>
       set((state) => ({ progress: { ...state.progress, isPlaying } }));
 
+    // Toda vez que uma playback nova começa, invalida o `onDone` da
+    // anterior — evita que um setTimeout velho (de uma rodada/resposta
+    // já trocada) zere `isPlaying` no meio do áudio da playback atual.
+    let playbackId = 0;
+
+    const nextPlaybackDone = () => {
+      playbackId += 1;
+      const id = playbackId;
+
+      return () => {
+        if (id === playbackId) setPlaying(false);
+      };
+    };
+
     const beginRound = (round: number) => {
       const {
         derived: { notePool },
@@ -102,7 +116,7 @@ export const useGuessNoteStore = createConfigStore<
         },
       }));
 
-      playReferenceThenMystery(mysteryNote, () => setPlaying(false));
+      playReferenceThenMystery(mysteryNote, nextPlaybackDone());
     };
 
     return {
@@ -135,7 +149,7 @@ export const useGuessNoteStore = createConfigStore<
           playGuitarNotesInSequence(
             [pitchClassToMidi(note), pitchClassToMidi(progress.mysteryNote)],
             700,
-            () => setPlaying(false),
+            nextPlaybackDone(),
           );
         }
       },
@@ -146,7 +160,7 @@ export const useGuessNoteStore = createConfigStore<
         if (mysteryNote === null || isPlaying) return;
 
         setPlaying(true);
-        playReferenceThenMystery(mysteryNote, () => setPlaying(false));
+        playReferenceThenMystery(mysteryNote, nextPlaybackDone());
       },
 
       playTonicOnly: () => playGuitarNote(pitchClassToMidi(Note.C)),
