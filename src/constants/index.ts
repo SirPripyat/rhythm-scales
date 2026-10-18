@@ -6,3 +6,5 @@ export const DEFAULT_FRET_COUNT = 15;
 export const MAX_SPATIAL_ATTEMPTS = 3;
 
 export const FRET_OPTIONS = [5, 12, 15, 19, 22, 24];
+
+export const MAX_FRET = FRET_OPTIONS[FRET_OPTIONS.length - 1];

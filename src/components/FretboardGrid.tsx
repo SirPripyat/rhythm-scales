@@ -2,19 +2,17 @@ import type { ReactNode } from 'react';
 import { FretNumber } from '@/components/FretNumber.tsx';
 
 type FretboardGridProps = {
-  fretCount: number;
+  frets: number[];
   tuning: number[];
   renderCell: (stringIndex: number, fret: number) => ReactNode;
 };
 
 export const FretboardGrid = ({
-  fretCount,
+  frets,
   tuning,
   renderCell,
 }: FretboardGridProps) => {
-  const columns = `repeat(${fretCount + 1}, minmax(2.5rem, 1fr))`;
-
-  const frets = Array.from({ length: fretCount + 1 }, (_, fret) => fret);
+  const columns = `repeat(${frets.length}, minmax(2.5rem, 1fr))`;
 
   // a corda mais aguda (maior índice) fica no topo
   const stringIndexes = Array.from(

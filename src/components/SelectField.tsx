@@ -25,7 +25,7 @@ type SelectFieldProps<V extends string | number> = {
 };
 
 const buttonStyles = clsx(
-  'flex h-[38px] items-center gap-2.5 whitespace-nowrap rounded-xl px-3.5',
+  'flex h-[38px] items-center justify-between gap-2.5 whitespace-nowrap rounded-xl px-3.5',
   'border border-white/[0.14] bg-white/[0.055] text-ink font-body text-[13.5px] backdrop-blur-[10px]',
   'cursor-pointer transition-all hover:bg-white/[0.09]',
   'data-open:border-white/[0.26]',
@@ -39,7 +39,7 @@ const iconStyles = clsx(
 const optionsStyles = clsx(
   'z-3 w-(--button-width) rounded-2xl border border-white/[0.26] p-1.5',
   'bg-[rgba(18,16,30,0.72)] backdrop-blur-[28px] backdrop-saturate-150',
-  '[--anchor-gap:8px] focus:outline-none',
+  '[--anchor-gap:8px] focus:outline-none [--anchor-max-height:19rem]',
 );
 
 const optionStyles = clsx(
