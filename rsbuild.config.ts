@@ -5,6 +5,10 @@ import { pluginTailwindcss } from '@rsbuild/plugin-tailwindcss';
 
 // Docs: https://rsbuild.rs/config/
 export default defineConfig({
+  html: {
+    title: 'Sscala',
+    favicon: './public/favicon.svg',
+  },
   plugins: [
     pluginReact({
       reactCompiler: true,

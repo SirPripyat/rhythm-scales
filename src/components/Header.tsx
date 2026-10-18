@@ -18,7 +18,7 @@ export const Header = () => {
           'sm:text-4xl md:text-5xl',
         )}
       >
-        Scalewise
+        Sscala
       </h1>
 
       <nav className="relative grid grid-cols-2 rounded-full border border-glass-border bg-glass p-1 backdrop-blur-sm">

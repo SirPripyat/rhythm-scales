@@ -61,6 +61,18 @@ real do usuário: treinar teoria musical na prática, não só visualizar.
   - Store: `useGameStore`, construído com a mesma fábrica genérica
     `createConfigStore` que o `useFretboardStore` usa (ver Decisões).
 
+- [x] **Visualizar escala em range de trastes** (`ScaleExplorer`) — toggle
+  (`SegmentedControl`, novo componente genérico) entre "Qtd. trastes"
+  (comportamento original) e "Range de trastes" (dois selects "De"/"Até").
+  Decisões tomadas: input em dois selects, não slider (sem componente de
+  range duplo pronto no Headless UI, e menos preciso que escolher num
+  dropdown); escopo só na tela Escala — `BuildScalePage`/`GuessNotePage`
+  continuam com `fretCount` fixo, sem `viewMode`; traste 0 (corda solta)
+  sempre visível, mesmo fora do intervalo escolhido. As opções de "De"/
+  "Até" são dinâmicas (`fretRangeOptions`): cada select só lista valores
+  que mantêm `De <= Até`, então não existe combinação inválida
+  selecionável pela UI.
+
 ## Passo atual
 
 **Próxima feature: "Adivinhar a nota" (treino de ouvido),
@@ -92,6 +104,24 @@ Outras candidatas discutidas, ainda não escolhidas (ficam pra depois):
 alternar nota/grau no braço, identificar a escala por padrão,
 posições/caixas (CAGED), acordes diatônicos, tocar a escala inteira em
 sequência (áudio), modos gregos (1.2b, adiado desde a Fase 1).
+
+## Backlog de features (propostas 2026-10-18)
+
+- [ ] **"Adivinhar a nota" com partitura** — mesma mecânica do treino de
+  ouvido já planejado pro `GuessNotePage` (toca uma nota, usuário
+  identifica de ouvido), porém com a resposta/leitura em notação musical
+  (pauta) em vez de nome/grid de nota. Decisões a tomar: lib de notação
+  pra renderizar a pauta (ex. VexFlow/abcjs), direção do exercício (ouve
+  e marca na pauta, ou lê a nota na pauta e confirma de ouvido), clave
+  fixa (sol) ou configurável.
+
+- [ ] **Página de audição isolada de notas** — tela sem pontuação/
+  tentativas, só pra ouvir cada nota tocada isoladamente e ganhar noção
+  auditiva, sem o aspecto de jogo. Provavelmente reaproveita
+  `playGuitarNote`/soundfont já usado no `Fretboard`. Decisões a tomar:
+  universo de notas (12 cromáticas vs. restrito à escala configurada) e
+  formato de navegação (lista/grid clicável nota a nota vs. sequência
+  automática).
 
 - [ ] **Animações/micro-interações** (candidatas discutidas, ainda não
   priorizadas) — objetivo: deixar a UX mais moderna sem sair de
@@ -249,3 +279,40 @@ sequência (áudio), modos gregos (1.2b, adiado desde a Fase 1).
   "tem uma nota da escala") e abre o conceito de tentativas limitadas
   (`MAX_SPATIAL_ATTEMPTS = 3`, com auto-resolução amigável na última
   tentativa errada, em vez de travar o usuário sem saída).
+- **`useFretboardStore`/`FretboardViewMode`/utils de view mode movidos pra
+  `ScalePage/stores`, `ScalePage/types`, `ScalePage/utils`**: são conceitos
+  exclusivos dessa página (`BuildScalePage`/`useGameStore` não têm
+  `viewMode`), diferente de `getFretboardPositions`/`positionKey`
+  (motor genérico, continuam em `src/utils`/`src/stores` reutilizável por
+  qualquer página). `positionKey` saiu de dentro do `useFretboardStore`
+  pro `fretboardUtils.ts` global nessa mudança, já que o `useGameStore`
+  também precisa dele e não pode importar de um store agora scoped à
+  `ScalePage`.
+- **`SegmentedControl`**: componente novo, genérico (`<V extends string |
+  number>`), construído sobre o mesmo `HeadlessRadioGroup`/`Radio` que o
+  `RadioGroup` já usa — só com pele visual de pill segmentado (um grupo,
+  destaque no item ativo) em vez de pills circulares individuais. Generalizar
+  evitou o cast `Number(value)` que o `RadioGroup` força no `Radio` (só
+  funciona por acaso pra valores numéricos como `root`; quebraria pra
+  `viewMode`, que é `'count' | 'range'`).
+- **Armadilha do Headless UI + `anchor` com `max-height`**: `ListboxOptions`
+  com `anchor="bottom"` recebe um **inline style** de `max-height`
+  calculado pelo floating-ui (`min(var(--anchor-max-height, 100vh),
+  <espaço disponível até a borda da viewport>)`), que sempre vence
+  qualquer classe Tailwind de `max-height` (inline sempre vence classe,
+  independente de especificidade). Pra limitar a altura do dropdown de
+  verdade (`SelectField`, usado pros selects "De"/"Até" com até 24
+  opções), a correção é setar a variável CSS que o próprio Headless UI já
+  lê (`[--anchor-max-height:15rem]`), não uma classe `max-h-*`.
+- **`SelectField` precisava de `justify-between` em `buttonStyles`**: sem
+  isso, o texto e o `ChevronDownIcon` ficam colados à esquerda — só não
+  aparecia porque, sem `className` de largura fixa, o botão sempre tinha
+  exatamente o tamanho do conteúdo (colado à esquerda coincidia com "na
+  borda direita"). Virou visível quando os selects "De"/"Até" ganharam
+  `className="w-20"`, que estica o botão além do conteúdo.
+- **`FretboardGrid` generalizado de `fretCount: number` pra `frets:
+  number[]`**: permite "buracos" no braço (ex. `[0,5,6,7,8,9]` no modo
+  range), em vez de só uma sequência contígua `0..fretCount`. O modo
+  contagem e o `SpatialFretboard` (`BuildScalePage`, sem `viewMode`)
+  continuam passando a sequência completa (`Array.from({length:
+  fretCount+1}, (_,i) => i)`), só que agora como array explícito.
