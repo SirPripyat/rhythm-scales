@@ -1,8 +1,8 @@
 import { ListboxButton } from '@headlessui/react';
 import { clsx } from 'clsx';
-import { NoteOptionsGrid } from '@/pages/BuildScalePage/components/NoteOptionsGrid.tsx';
 import type { Note } from '@/types';
 import { NOTE_LABELS } from '@/utils';
+import { NoteOptionsGrid } from './NoteOptionsGrid';
 
 type NoteStatus = 'idle' | 'correct' | 'wrong';
 
