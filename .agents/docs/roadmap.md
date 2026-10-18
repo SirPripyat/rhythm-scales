@@ -107,6 +107,11 @@ sequência (áudio), modos gregos (1.2b, adiado desde a Fase 1).
 
 ## Backlog de features (propostas 2026-10-18)
 
+- [ ] **Persistir opções do `ScaleExplorer` na URL com `nuqs`** — hoje
+  tônica/escala/afinação/`viewMode`/range de trastes vivem só no
+  `useFretboardStore`, se perdem ao recarregar ou compartilhar o link.
+  Usar `nuqs` pra sincronizar esse estado com query params da URL.
+
 - [ ] **"Adivinhar a nota" com partitura** — mesma mecânica do treino de
   ouvido já planejado pro `GuessNotePage` (toca uma nota, usuário
   identifica de ouvido), porém com a resposta/leitura em notação musical
