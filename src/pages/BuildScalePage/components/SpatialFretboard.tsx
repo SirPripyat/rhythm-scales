@@ -1,6 +1,6 @@
 import { FretboardGrid } from '@/components';
-import { positionKey, useGameStore } from '@/stores';
-import { noteAtStringFret, TUNINGS } from '@/utils';
+import { useGameStore } from '@/stores';
+import { noteAtStringFret, positionKey, TUNINGS } from '@/utils';
 import { SpatialCell } from './SpatialCell';
 
 export const SpatialFretboard = () => {
@@ -10,7 +10,7 @@ export const SpatialFretboard = () => {
 
   return (
     <FretboardGrid
-      fretCount={fretCount}
+      frets={Array.from({ length: fretCount + 1 }, (_, i) => i)}
       tuning={TUNINGS.standard}
       renderCell={(stringIndex, fret) => {
         const key = positionKey(stringIndex, fret);

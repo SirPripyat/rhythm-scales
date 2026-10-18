@@ -10,4 +10,5 @@ export * from './Header';
 export * from './Label';
 export * from './RadioGroup';
 export * from './SectionIntro';
+export * from './SegmentedControl';
 export * from './SelectField';

@@ -7,6 +7,7 @@ type RadioGroupProps = {
   onChange: (value: string | number) => void;
   label: string;
   options: { label: string; value: string | number }[];
+  className?: string;
 };
 
 export const RadioGroup = ({
@@ -14,12 +15,13 @@ export const RadioGroup = ({
   onChange,
   label,
   options,
+  className,
 }: RadioGroupProps) => {
   return (
     <HeadlessRadioGroup
       value={value}
       onChange={onChange}
-      className={'flex flex-col gap-2'}
+      className={clsx('flex flex-col gap-2', className)}
     >
       <Label>{label}</Label>
 

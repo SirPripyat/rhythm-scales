@@ -1,5 +1,5 @@
-import { useFretboardStore } from '@/stores';
 import { NOTE_LABELS, SCALE_TYPE_LABELS, TUNINGS_LABELS } from '@/utils';
+import { useFretboardStore } from '../stores';
 import { Swatch } from './Swatch';
 
 export const FretboardSubtitles = () => {
