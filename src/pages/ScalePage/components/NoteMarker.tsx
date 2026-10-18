@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 import { type AnimationEvent, useState } from 'react';
-import { useFretboardStore } from '@/stores';
 import type { FretboardPosition } from '@/types';
 import { noteNameFromPitchClass } from '@/utils';
+import { useFretboardStore } from '../stores';
 
 const VARIANT = {
   root: 'border-glow-amber/65 bg-glow-amber/60 text-on-amber shadow-root',

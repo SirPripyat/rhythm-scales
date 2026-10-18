@@ -93,6 +93,33 @@ alternar nota/grau no braço, identificar a escala por padrão,
 posições/caixas (CAGED), acordes diatônicos, tocar a escala inteira em
 sequência (áudio), modos gregos (1.2b, adiado desde a Fase 1).
 
+## Backlog de features (propostas 2026-10-18)
+
+- [ ] **Visualizar escala em range de trastes** — hoje o braço sempre
+  mostra do traste 0 até `fretCount`; adicionar opção de restringir a
+  visualização a um intervalo (ex.: só trastes 5 a 8), útil pra estudar
+  posições/caixas sem decorar o braço inteiro. Decisões a tomar antes de
+  implementar: inputs do range (dois selects "de"/"até" vs. um range
+  slider único), se o recorte afeta só a visualização do braço ou também
+  os jogos (`BuildScalePage`/`GuessNotePage`), e se corda solta (traste 0)
+  fica sempre visível independente do range escolhido.
+
+- [ ] **"Adivinhar a nota" com partitura** — mesma mecânica do treino de
+  ouvido já planejado pro `GuessNotePage` (toca uma nota, usuário
+  identifica de ouvido), porém com a resposta/leitura em notação musical
+  (pauta) em vez de nome/grid de nota. Decisões a tomar: lib de notação
+  pra renderizar a pauta (ex. VexFlow/abcjs), direção do exercício (ouve
+  e marca na pauta, ou lê a nota na pauta e confirma de ouvido), clave
+  fixa (sol) ou configurável.
+
+- [ ] **Página de audição isolada de notas** — tela sem pontuação/
+  tentativas, só pra ouvir cada nota tocada isoladamente e ganhar noção
+  auditiva, sem o aspecto de jogo. Provavelmente reaproveita
+  `playGuitarNote`/soundfont já usado no `Fretboard`. Decisões a tomar:
+  universo de notas (12 cromáticas vs. restrito à escala configurada) e
+  formato de navegação (lista/grid clicável nota a nota vs. sequência
+  automática).
+
 - [ ] **Animações/micro-interações** (candidatas discutidas, ainda não
   priorizadas) — objetivo: deixar a UX mais moderna sem sair de
   Tailwind/CSS puro (ver decisão abaixo). Em ordem de impacto sugerida:

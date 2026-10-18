@@ -1,9 +1,13 @@
 import { DEFAULT_FRET_COUNT, MAX_SPATIAL_ATTEMPTS } from '@/constants';
 import type { FretboardPosition, ScaleType } from '@/types';
 import { Note } from '@/types';
-import { getFretboardPositions, getScaleNotes, SCALE_INTERVALS } from '@/utils';
+import {
+  getFretboardPositions,
+  getScaleNotes,
+  positionKey,
+  SCALE_INTERVALS,
+} from '@/utils';
 import { createConfigStore } from './createConfigStore';
-import { positionKey } from './useFretboardStore';
 
 export type GameConfig = {
   root: Note;

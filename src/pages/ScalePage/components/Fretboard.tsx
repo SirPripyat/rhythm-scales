@@ -1,17 +1,16 @@
 import { FretboardGrid } from '@/components';
-import { positionKey, useFretboardStore } from '@/stores';
-import { noteAtStringFret } from '@/utils';
+import { noteAtStringFret, positionKey } from '@/utils';
+import { useFretboardStore } from '../stores';
 import { FretboardCell } from './FretboardCell';
 
 export const Fretboard = () => {
   const {
-    config: { fretCount },
-    derived: { tuning, positions },
+    derived: { tuning, positions, visibleFrets },
   } = useFretboardStore();
 
   return (
     <FretboardGrid
-      fretCount={fretCount}
+      frets={visibleFrets}
       tuning={tuning}
       renderCell={(stringIndex, fret) => {
         const key = positionKey(stringIndex, fret);

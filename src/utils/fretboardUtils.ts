@@ -36,3 +36,6 @@ export const getFretboardPositions = (
 
   return positions;
 };
+
+export const positionKey = (stringIndex: number, fret: number) =>
+  `${stringIndex}-${fret}`;

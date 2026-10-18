@@ -1,8 +1,8 @@
 import { clsx } from 'clsx';
 import { CellShell } from '@/components';
-import { positionKey, useGameStore } from '@/stores';
+import { useGameStore } from '@/stores';
 import type { Note } from '@/types';
-import { NOTE_LABELS } from '@/utils';
+import { NOTE_LABELS, positionKey } from '@/utils';
 import { PickNoteListbox } from './PickNoteListbox';
 
 type SpatialCellProps = {
