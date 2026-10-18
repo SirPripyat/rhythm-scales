@@ -1,35 +1,20 @@
-import { ClockIcon } from '@heroicons/react/24/outline';
 import { ArrowPathIcon, MusicalNoteIcon } from '@heroicons/react/24/solid';
-import { clsx } from 'clsx';
 import { Button, Card } from '@/components';
 import { useGuessNoteStore } from '../stores';
-import { GUESS_NOTE_DEGREES } from '../utils';
-import { PickNote } from './PickNote';
+import { AnswerOptionsPanel } from './AnswerOptionsPanel';
+import { IconPhase } from './IconPhase';
 
 export const WaitingPhasePanel = () => {
   const {
-    derived: { notePool },
-    progress: { isPlaying, phase, round },
+    progress: { isPlaying },
     replay,
     playTonicOnly,
   } = useGuessNoteStore();
 
-  const options = GUESS_NOTE_DEGREES.filter(({ note }) =>
-    notePool.includes(note),
-  );
-
   return (
     <div className={'flex flex-col gap-4'}>
       <Card>
-        <div
-          className={clsx(
-            'relative flex flex-col items-center justify-center rounded-full size-14 border border-glass-border',
-            isPlaying &&
-              "after:content-[''] after:absolute after:-inset-px after:rounded-full after:border after:border-glow-teal after:animate-pulse-ring motion-reduce:after:animate-none",
-          )}
-        >
-          <ClockIcon className={'size-7 text-ink-dim'} />
-        </div>
+        <IconPhase phase={'waiting'} />
 
         <div className={'flex flex-col gap-1 items-center'}>
           <h2 className={'font-display font-bold text-[1.1rem]'}>
@@ -62,19 +47,7 @@ export const WaitingPhasePanel = () => {
         </div>
       </Card>
 
-      <div
-        className={
-          'flex items-center justify-center text-ink-faint uppercase font-mono text-[12px] trailing-[0.12em]'
-        }
-      >
-        Rodada {round}
-      </div>
-
-      <div className={'flex flex-wrap items-center justify-center gap-3'}>
-        {options.map((note) => (
-          <PickNote key={note.note} note={note} phase={phase} />
-        ))}
-      </div>
+      <AnswerOptionsPanel />
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import { RadioGroup, SelectField } from '@/components';
+import { FRET_OPTIONS } from '@/constants';
 import { useFretboardStore } from '@/stores';
 import type { Note, ScaleType } from '@/types';
 import {
-  FRET_OPTIONS,
   NOTE_LABELS,
   SCALE_TYPE_LABELS,
   TUNINGS_LABELS,

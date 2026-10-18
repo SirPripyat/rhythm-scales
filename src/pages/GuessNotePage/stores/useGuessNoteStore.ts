@@ -2,8 +2,12 @@ import { playGuitarNote, playGuitarNotesInSequence } from '@/lib';
 import { createConfigStore } from '@/stores';
 import { Note } from '@/types';
 import { pitchClassToMidi } from '@/utils';
-import type { GuessNoteLevel, GuessNotePhase } from '../types';
-import { GUESS_NOTE_LEVEL_POOL, pickMysteryNote } from '../utils';
+import type { GuessNoteDegree, GuessNoteLevel, GuessNotePhase } from '../types';
+import {
+  GUESS_NOTE_DEGREES,
+  GUESS_NOTE_LEVEL_POOL,
+  pickMysteryNote,
+} from '../utils';
 
 type GuessNoteConfig = {
   level: GuessNoteLevel;
@@ -11,6 +15,7 @@ type GuessNoteConfig = {
 
 type GuessNoteDerived = {
   notePool: Note[];
+  answerOptions: GuessNoteDegree[];
 };
 
 type GuessNoteProgress = {
@@ -36,9 +41,16 @@ const DEFAULT_GUESS_NOTE_CONFIG: GuessNoteConfig = {
   level: 'easy',
 };
 
-const deriveState = (config: GuessNoteConfig): GuessNoteDerived => ({
-  notePool: GUESS_NOTE_LEVEL_POOL[config.level],
-});
+const deriveState = (config: GuessNoteConfig): GuessNoteDerived => {
+  const notePool = GUESS_NOTE_LEVEL_POOL[config.level];
+
+  return {
+    notePool,
+    answerOptions: GUESS_NOTE_DEGREES.filter(({ note }) =>
+      notePool.includes(note),
+    ),
+  };
+};
 
 const defaultProgress = (): GuessNoteProgress => ({
   phase: 'idle',

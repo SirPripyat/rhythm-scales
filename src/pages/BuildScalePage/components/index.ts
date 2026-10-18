@@ -1,5 +1,6 @@
 export * from './CompletionBanner';
 export * from './ConfigurationStep';
+export * from './NoteBadgeButton';
 export * from './NoteListbox';
 export * from './NoteOptionsGrid';
 export * from './SpatialCell';

@@ -1,5 +1,5 @@
-import type { GuessNoteLevel } from '@/pages/GuessNotePage/types';
-import { Note } from '../../../types';
+import { Note } from '@/types';
+import type { GuessNoteLevel } from '../types';
 
 type GuessNoteLevelOption = {
   id: GuessNoteLevel;

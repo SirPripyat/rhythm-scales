@@ -1,7 +1,6 @@
-import { ListboxButton } from '@headlessui/react';
-import { clsx } from 'clsx';
 import type { Note } from '@/types';
 import { NOTE_LABELS, toOptions } from '@/utils';
+import { NoteBadgeButton } from './NoteBadgeButton';
 import { NoteOptionsGrid } from './NoteOptionsGrid';
 
 export type NoteListboxStatus = 'idle' | 'correct' | 'wrong' | 'tonic';
@@ -38,16 +37,12 @@ export const NoteListbox = ({
       disabled={isDisabled}
     >
       <div className={'flex flex-col gap-2 items-center'}>
-        <ListboxButton
-          className={clsx(
-            'flex size-12 items-center justify-center rounded-full border font-mono text-[13px] font-bold',
-            'backdrop-blur-[6px] transition cursor-pointer border-glass-border bg-glass  hover:bg-white/9',
-            'data-open:border-white/26 data-disabled:pointer-events-none',
-            LISTBOX_BUTTON_COLOR[status],
-          )}
+        <NoteBadgeButton
+          colorClassName={LISTBOX_BUTTON_COLOR[status]}
+          size={'lg'}
         >
           {value !== null ? NOTE_LABELS[value] : '?'}
-        </ListboxButton>
+        </NoteBadgeButton>
 
         {index !== undefined && (
           <p

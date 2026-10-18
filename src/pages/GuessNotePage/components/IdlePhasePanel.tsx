@@ -1,19 +1,13 @@
 import { Button, Card } from '@/components';
 import { useGuessNoteStore } from '../stores';
-import { EarIcon } from './EarIcon';
+import { IconPhase } from './IconPhase';
 
 export const IdlePhasePanel = () => {
   const { start } = useGuessNoteStore();
 
   return (
     <Card>
-      <div
-        className={
-          'flex flex-col items-center justify-center rounded-full size-14 border border-glass-border'
-        }
-      >
-        <EarIcon />
-      </div>
+      <IconPhase phase={'idle'} />
 
       <div className={'flex flex-col gap-1 items-center'}>
         <h2 className={'font-display font-bold text-[1.1rem]'}>

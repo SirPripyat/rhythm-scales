@@ -1,12 +1,8 @@
 import { Button, RadioGroup, SelectField } from '@/components';
+import { FRET_OPTIONS } from '@/constants';
 import { useGameStore } from '@/stores';
 import type { Note, ScaleType } from '@/types';
-import {
-  FRET_OPTIONS,
-  NOTE_LABELS,
-  SCALE_TYPE_LABELS,
-  toOptions,
-} from '@/utils';
+import { NOTE_LABELS, SCALE_TYPE_LABELS, toOptions } from '@/utils';
 import { StepCard } from './StepCard';
 
 export const ConfigurationStep = () => {

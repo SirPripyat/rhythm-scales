@@ -1,5 +1,5 @@
-import type { FretboardPosition } from 'src/types';
 import { CellShell } from '@/components';
+import type { FretboardPosition } from '@/types';
 import { NoteMarker } from './NoteMarker';
 
 type FretboardCellProps = {
