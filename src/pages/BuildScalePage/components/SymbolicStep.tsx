@@ -102,17 +102,20 @@ export const SymbolicStep = () => {
       </div>
 
       <div className={'flex flex-wrap gap-4'}>
-        {symbolicAnswers.map((answer, index) => (
-          <NoteListbox
-            index={index}
-            value={answer}
-            status={slotStatus(index)}
-            disabled={isBlocked}
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={`${answer}-${index}`}
-            onChange={(value) => answerSymbolic(index, value)}
-          />
-        ))}
+        {symbolicAnswers.map((answer, index) => {
+          const key = `${answer}-${index}`;
+
+          return (
+            <NoteListbox
+              index={index}
+              value={answer}
+              status={slotStatus(index)}
+              disabled={isBlocked}
+              key={key}
+              onChange={(value) => answerSymbolic(index, value)}
+            />
+          );
+        })}
       </div>
 
       <div className={'flex flex-wrap items-center justify-end gap-4'}>
